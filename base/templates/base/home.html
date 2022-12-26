@@ -5,7 +5,67 @@
 {% block content %}
 
     <div class="container">
-        <h1>home page</h1>
+       
+        <div class="container">
+            <section class="">
+                <div class="row justify-content-center">
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 p-2">
+                        <div class=" card card-default rounded-0 shadow border border-gray">
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    <div class="d-flex w-100 align-items-center">
+                                        <div class="col-3">
+                                            <i class="fs-1 text-primary fa fa-th-list"></i>
+                                        </div>
+                                        <div class="col-9">
+                                            <h1 class="text-end">{{total_fuel}}</h2>
+                                                <div class="text-end text-sm"><b>Total Petrol Type</b></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% for fuel in fuels %}
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 p-2">
+                        <div class=" card card-default rounded-0 shadow border border-gray">
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    <div class="d-flex w-100 align-items-center">
+                                        <div class="col-3">
+                                            <i class="fs-1 text-muted fa fa-gas-pump"></i>
+                                        </div>
+                                        <div class="col-9">
+                                            <h1 class="text-end">{{fuel.available}}</h2>
+                                                <div class="text-end text-sm"><b>Available {{fuel}} L</b></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 p-2">
+                        <div class=" card card-default rounded-0 shadow border border-gray">
+                            <div class="card-body">
+                                <div class="container-fluid">
+                                    <div class="d-flex w-100 align-items-center">
+                                        <div class="col-3">
+                                            <i class="fs-1 text-warning fa fa-coins"></i>
+                                        </div>
+                                        <div class="col-9">
+                                            <h1 class="text-end">{{total_sales|floatformat:2}}</h2>
+                                                <div class="text-end text-sm"><b>Today's Sale</b></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section>
+            </div>
     </div>
 
 {% endblock %}

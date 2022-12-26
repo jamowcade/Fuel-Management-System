@@ -20,6 +20,24 @@ class Fuel(models.Model):
 
 
 
+    
+    # returns the available volume for each fuel. subtracting the volume in sale from the volume in 
+    def available(self):
+        try:
+            stockin = Stock.objects.filter(fuel = self).aggregate(models.Sum("volume"))['volume__sum']
+            if stockin is None:
+                stockin = 0
+        except:
+            stockin = 0
+        try:
+            sale = Sale.objects.filter(fuel = self).aggregate(models.Sum("volume"))['volume__sum']
+            if sale is None:
+                sale = 0
+        except:
+            sale = 0
+            print(sale)
+        return stockin - sale
+
 # stock manager table.
 class Stock(models.Model):
     fuel = models.ForeignKey(Fuel, on_delete=models.CASCADE)
@@ -28,13 +46,12 @@ class Stock(models.Model):
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 
-
     class Meta:
         ordering = ['-updated','-created']
         verbose_name_plural = "Stock lists"
 
     def __str__(self):
-        return f"{self.petrol.name} - [{self.volume} L]"
+        return f"{self.fuel.name} - [{self.volume} L]"
 
 
 # sales model/table

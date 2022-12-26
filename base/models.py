@@ -36,6 +36,8 @@ class Stock(models.Model):
     def __str__(self):
         return f"{self.petrol.name} - [{self.volume} L]"
 
+
+# sales model/table
 class Sale(models.Model):
     customer_name = models.CharField(max_length=200)
     fuel = models.ForeignKey(Fuel, on_delete=models.CASCADE)
@@ -48,6 +50,10 @@ class Sale(models.Model):
     class Meta:
         verbose_name_plural = "Sales list"
         ordering = ['-updated', '-created']
+    
+
+    def __str__(self):
+        return f"{self.customer_name} - [{self.fuel} - {self.volume} L]"
     
     
 

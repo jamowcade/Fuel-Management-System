@@ -1,0 +1,49 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<br>
+    <div class="container justify-content-center">
+     <div>
+        <a href=""><button class="btn btn-primary">Add Fuel Type</button></a>
+     </div>
+        <div class="card mb-4 mt-2">
+            <div class="card-header">
+                <h4>Fuel List</h4>
+            </div>
+            <div class="card-body">
+                <div class="container">
+                    <table class="table table-bordered">
+                        <thead class="table-dark">
+                            <th>No</th>
+                            <th>Fuel Type</th>
+                            <th>Volume</th>
+                            <th>Amount</th>
+                            <th>Created Date</th>
+                            <th>Action</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {% for sale in sales %}
+                                
+                                <td>{{sale.id}}</td>
+                                <td>{{sale.fuel}}</td>
+                                <td>{{sale.volume}}</td>
+                                <td>${{sale.amount}}</td>
+                                <td>{{sale.created}}</td>
+                                <td>
+                                    <a href=""><button class="btn btn-info">update</button></a>
+                                    <a href=""><button class="btn btn-danger">Delete</button></a>
+                                </td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+
+{% endblock %}

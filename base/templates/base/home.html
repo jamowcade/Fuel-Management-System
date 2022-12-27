@@ -26,7 +26,7 @@
                             </div>
                         </div>
                     </div>
-                    {% for fuel in fuels %}
+                    <!-- {% for fuel in fuels %}
                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 p-2">
                         <div class=" card card-default rounded-0 shadow border border-gray">
                             <div class="card-body">
@@ -44,7 +44,7 @@
                             </div>
                         </div>
                     </div>
-                    {% endfor %}
+                    {% endfor %} -->
                     <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12 p-2">
                         <div class=" card card-default rounded-0 shadow border border-gray">
                             <div class="card-body">
@@ -55,13 +55,50 @@
                                         </div>
                                         <div class="col-9">
                                             <h1 class="text-end">${{total_sales|floatformat:2}}</h2>
-                                                <div class="text-end text-sm"><b>Today's Sale</b></div>
+                                                <div class="text-end text-sm"><b>Total Sale</b></div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
+                <hr>
+                
+                <div  class="row justify-content-center">
+                    <a href="{% url 'new_sale' %}"><button class="btn btn-primary">New Sale</button></a>
+                    <div style="display: none;" class="col-lg-4 col-md-6 col-sm-12 col-xs-12 p-2">
+                        <div class=" card card-default rounded-0 shadow border border-gray">
+                        <div class="card-header">
+                            Add new Sale
+                        </div>
+                        <div class="card-body">
+                            <div class="container">
+                                <form action="{% url 'new_sale' %}" method="POST">
+                                    {% csrf_token %}
+                                    {% for field in form %}
+                                        <div class="form-group">
+                                            {{field.label}}
+                                            {% if field.error %}
+                                            <p>{{field.error}}</p>
+                                            {% endif %}
+                                        </div>
+                                        <div class="form-group">
+                                            {{field}}
+                                        </div>
+                                       
+                                        
+        
+                                    {% endfor %}
+                                    <div class="form-group">
+                                        <button type="submit" class="btn btn-success">Save</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        </div>
+                </div>
+
                 </div>
             </section>
             <section>

@@ -4,7 +4,7 @@
 <br>
     <div class="container justify-content-center">
      <div>
-        <a href=""><button class="btn btn-primary">Add Fuel Type</button></a>
+        <a href="{% url 'new_sale' %}"><button class="btn btn-primary">Add Fuel Type</button></a>
      </div>
         <div class="card mb-4 mt-2">
             <div class="card-header">
@@ -15,6 +15,7 @@
                     <table class="table table-bordered">
                         <thead class="table-dark">
                             <th>No</th>
+                            <th>Customer</th>
                             <th>Fuel Type</th>
                             <th>Volume</th>
                             <th>Amount</th>
@@ -26,6 +27,7 @@
                                 {% for sale in sales %}
                                 
                                 <td>{{sale.id}}</td>
+                                <td>{{sale.customer_name}}</td>
                                 <td>{{sale.fuel}}</td>
                                 <td>{{sale.volume}}</td>
                                 <td>${{sale.amount}}</td>

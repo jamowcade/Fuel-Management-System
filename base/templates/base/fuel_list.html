@@ -4,7 +4,7 @@
 <br>
     <div class="container justify-content-center">
      <div>
-        <a href=""><button class="btn btn-primary">Add Fuel Type</button></a>
+        <a href="{% url 'new_fuel' %}"><button class="btn btn-primary">Add Fuel Type</button></a>
      </div>
         <div class="card mb-4 mt-2">
             <div class="card-header">
@@ -12,26 +12,26 @@
             </div>
             <div class="card-body">
                 <div class="container">
-                    <table class="table table-bordered">
+                    <table class="table">
                         <thead class="table-dark">
                             <th>No</th>
                             <th>Fuel Type</th>
                             <th>Price</th>
                             <th>Created Date</th>
-                            <th>Action</th>
+                            <!-- <th>Action</th> -->
                         </thead>
                         <tbody>
                             <tr>
                                 {% for fuel in fuels %}
                                 
                                 <td>{{fuel.id}}</td>
-                                <td>{{fuel.name}}</td>
+                                <td><a href="{% url 'fuel_detail' fuel.id %}">{{fuel}}</a></td>
                                 <td>${{fuel.price}}</td>
                                 <td>{{fuel.created}}</td>
-                                <td>
+                                <!-- <td>
                                     <a href=""><button class="btn btn-info">update</button></a>
                                     <a href=""><button class="btn btn-danger">Delete</button></a>
-                                </td>
+                                </td> -->
 
                             </tr>
                             {% endfor %}

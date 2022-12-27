@@ -1,0 +1,148 @@
+{% extends 'main.html' %}
+
+
+
+{% block content %}
+    <div class="cotainer mt-5 mb-5">
+        <div class="row">
+            <div class="col col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                <div class="container mb-5">
+                   <h3>{{fuel}} Details</h3>
+                   <a href="">update</a>
+                  
+                    
+                    <table class="table">
+                       
+                        <thead class="table-primary table-light">
+                            <td>Name</td>
+                            <th>Date Added</th>
+                            <th>Last Date Updated</th>
+                            <th>Available Volume</th>
+                            <th>user Created</th>
+                        </thead>
+                        
+
+                        
+                        <tbody>
+                            <tr>
+                                <td>
+                                    {{fuel}}
+                                </td>
+                                <td>
+                                    {{fuel.created}}
+                                </td>
+                                <td>
+                                    {{fuel.updated}}
+                                </td>
+                                <td>
+                                    {{fuel.available}}
+                                </td>
+                                <td>
+                                    {{fuel.user}}
+                                </td>
+                            
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div> <!--  end of fuel details -->
+                <div><hr></div>
+                <div class="container mb-5">
+                    <h3>Stock Details</h3>
+                    <table class="table">
+                        <thead class="table-primary table-light">
+                      
+                            <th>id</th>
+                            <th>Date Created</th>
+                            <th>Last Date Updated</th>
+                            <th>Volume</th>
+                            <th>user Added</th>
+                        </thead>
+                        <tbody>
+                            {% for stock in stocks %}
+                            <tr>
+                                <td>
+                                    {{stock.id}}
+                                </td>
+                                <td>
+                                    {{stock.created}}
+                                </td>
+                                <td>
+                                    {{stock.updated}}
+                                </td>
+                                <td>
+                                    {{stock.volume}}
+                                </td>
+                                <td>
+                                    {% if not stock.user %}
+                                    None
+                                   {% else %}
+                                    {{stock.user}}
+                                    {% endif %}
+                                </td>
+                            {% endfor %}
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+
+                </div> <!--  end of fuel-stock details -->
+                <div><hr></div>
+                <div class="container">
+                    <h3>Sale Details</h3>
+                        <span>Total Sales: {{total_sale.amount__sum}}</span>
+                    <table class="table">
+                        <thead class="table-primary table-light">
+                            <td>id</td>
+                            <th>Date Created</th>
+                            <th>Last Date Updated</th>
+                            <th>Customer</th>
+                            <th>Volume</th>
+                            <th>Amount</th>
+                            <th>user Added</th>
+                        </thead>
+                        <tbody>
+                            {% for sale in sales %}
+                            <tr>
+                                <td>
+                                    {{sale.id}}
+                                </td>
+                                <td>
+                                    {{sale.created}}
+                                </td>
+                                <td>
+                                    {{sale.updated}}
+                                </td>
+                                <td>
+                                    {{sale.customer_name}}
+                                </td>
+                                <td>
+                                    {{sale.volume}}
+                                </td>
+                                <td>
+                                    {{sale.amount}}
+                                </td>
+                                <td>
+                                    {% if not sale.user %}
+                                    None
+                                   {% else %}
+                                    {{stock.user}}
+                                    {% endif %}
+                                </td>
+                           
+                            </tr>
+                            {% empty %}
+                            <h6>NOT SALES FOR THIS</h6>
+                            {% endfor %}
+                            
+                        </tbody>
+                    </table>
+
+                </div><!--  end of fuel-sale details -->
+
+            </div><!--  end of col -->
+        </div> <!--  end of row -->
+    </div> <!--  end of main container -->
+
+
+{% endblock %}

@@ -48,3 +48,11 @@ def saleView(request):
         "sales":sales
     }
     return render(request, 'base/sale_list.html', context)
+
+def inventoryView(request):
+    fuels = Fuel.objects.all()
+
+    context = {
+        "fuels":fuels
+    }
+    return render(request, 'base/inventory.html', context)

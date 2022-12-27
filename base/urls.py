@@ -7,6 +7,6 @@ urlpatterns = [
     path('fuels/', views.fuelView, name="fuels"),
     path('stocks/', views.stockView, name="stocks"),
     path('sales/', views.saleView, name="sales"),
-
+    path('inventory/', views.inventoryView, name="inventory"),
 
 ]

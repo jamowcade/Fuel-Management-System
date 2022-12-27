@@ -39,7 +39,7 @@ def stockView(request):
 
     return render(request, 'base/stock_list.html', context)
 
-
+#sale view
 def saleView(request):
     fuels = Fuel.objects.all().values_list('id')
     sales = Sale.objects.filter(fuel__id__in=fuels).all()

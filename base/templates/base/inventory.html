@@ -1,0 +1,38 @@
+{% extends 'main.html' %}
+
+{% block content %}
+<br>
+    <div class="container justify-content-center">
+   
+        <div class="card mb-4 mt-2">
+            <div class="card-header">
+                <h4>Inventory</h4>
+            </div>
+            <div class="card-body">
+                <div class="container">
+                    <table class="table table-bordered table-hovored">
+                        <thead class="table-dark">
+                            <th>#</th>
+                            <th>Fuel Type</th>
+                            <th>available</th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {% for fuel in fuels %}
+                                
+                                <td>{{forloop.counter}}</td>
+                                <td>{{fuel}}</td>
+                                <td>{{fuel.available}}</td>
+
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+   
+
+{% endblock %}

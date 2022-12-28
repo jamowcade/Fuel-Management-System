@@ -1,6 +1,6 @@
 {% extends 'main.html' %}
 {% block title %}
-    New Fuel
+    Login
 {% endblock title %}
 
 {% block content %}
@@ -12,28 +12,23 @@
             <div class="col">
                 <div class="cotainer">
                     <div class="card">
-                        <div class="card-header">Add New Fuel Type</div>
+                        <div class="card-header">Please Login</div>
                     
                     <div class="card-body">
                         <form action="" method="POST">
                             {% csrf_token %}
-                            {% for field in form %}
+                            
                                 <div class="form-group">
-                                    {{field.label}}
-                                    {% if field.error %}
-                                    <p>{{field.error}}</p>
-                                    {% endif %}
+                                  <label for="username" class="form-group">Username</label>
+                                  <input type="text" name="username" class="form-group">  
                                 </div>
                                 <div class="form-group">
-                                    {{field}}
-                                    {{field.status}}
+                                    <label for="password" class="form-group">Password</label>
+                                    <input type="password" name="password" class="form-group">
                                 </div>
-                               
-                                
-
-                            {% endfor %}
+                           
                             <div class="form-group">
-                                <button type="submit" class="btn btn-success">Save</button>
+                                <button type="submit" class="btn btn-success">Login</button>
                             </div>
                         </form>
                        

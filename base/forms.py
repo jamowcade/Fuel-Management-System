@@ -6,7 +6,7 @@ from .models import Fuel, Stock, Sale
 class FuelForm(ModelForm):
     class Meta:
         model = Fuel
-        fields = ['name','price']
+        fields = ['name','price','status']
     
 
 

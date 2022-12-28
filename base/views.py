@@ -3,10 +3,40 @@ from .forms import FuelForm, StockForm, SaleForm
 from .models import Fuel, Sale, Stock
 from django.db.models import Sum
 from django.contrib import messages
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth.decorators import login_required, permission_required
+
 
 # Create your views here.
 
+#login user.
 
+def loginUser(request):
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    username = ""
+    password = ""
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+
+        user = authenticate(username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'invalid username or password', extra_tags='danger')
+    
+    return render(request, 'base/login.html')
+
+def logoutUser(request):
+    logout(request)
+    messages.success(request, 'you are looged out')
+    return redirect('login')
+
+@login_required(login_url='login')
 def home(request):
     form = SaleForm()
     total_fuels = Fuel.objects.filter(delete_flag=0, status=1).count()
@@ -24,13 +54,18 @@ def home(request):
     }
     return render(request, 'base/home.html', context)
 
+
+@login_required(login_url='login')
 def fuelView(request):
+    if request.user.groups == 'sales':
+        return redirect('home')
     fuels = Fuel.objects.filter(delete_flag = 0, status = 1).all()
     context = {
         "fuels":fuels
     }
     return render(request, 'base/fuel_list.html', context)
 
+@permission_required('base.add_Fuel', login_url='login')
 def saveFuel(request):
     form = FuelForm()
     if request.method == 'POST':
@@ -40,12 +75,13 @@ def saveFuel(request):
             messages.success(request, 'fuel added successfully')
             return redirect('fuels')
         else:
-            messages.error(request, 'fuel cannot be saved')
+            messages.warning(request, 'fuel cannot be saved')
     context = {
         "form":form
     }
     return render(request, 'base/fuelform.html', context)  
 
+@login_required(login_url='login')
 def updateFuel(request, pk):
     form = FuelForm()
     fuel = Fuel.objects.get(id=pk)
@@ -61,14 +97,15 @@ def updateFuel(request, pk):
 
     }
     return render(request, 'base/fuelform.html', context)
-
+@login_required(login_url='login')
 def deleteFuel(request, pk = None):
     fuel = Fuel.objects.filter(id=pk).update(delete_flag=1)
     messages.success(request, f"Fuel {fuel} has been deleted successfully")
     return redirect('fuels')
 
 
-
+@login_required(login_url='login')
+@permission_required('base.add_fuel', raise_exception=True)
 def saveStock(request):
     form = StockForm()
     context = {
@@ -84,7 +121,12 @@ def saveStock(request):
     return render(request, 'base/stockform.html', context)
 
 #update stock
+@login_required(login_url='login')
+@permission_required('base.change_stock', raise_exception=True)
 def updateStock(request, pk):
+    # if not request.user.has_perm('base.change_stock'):
+    #     messages.error(request, 'You don\'t have permission to change stock', extra_tags='danger')
+    #     return redirect('stocks')
     form = StockForm()
     stock = Stock.objects.get(id=pk)
     form = StockForm(instance=stock)
@@ -95,14 +137,19 @@ def updateStock(request, pk):
             messages.success(request, f'Stock {stock} successfully updated ')
             return redirect('stocks')
         else:
-            messages.error(request, 'form cannot be updated')
+            messages.error(request, 'form cannot be updated', extra_tags='danger')
     context = {
         "form":form
 
     }
     return render(request, 'base/stockform.html', context)
-#delete stock by id.
+
+@login_required(login_url='login')
+@permission_required('base.delete_stock', raise_exception=True)
 def deleteStock(request, pk):
+    # if not request.user.has_perm('base.delete_Stock'):
+    #     messages.warning(request, 'You don\'t have permission to delete stock', extra_tags="danger")
+    #     return redirect('stocks')
     try:
         stock = Stock.objects.filter(id=pk).delete()
         messages.success(request, f'stock {stock} has been deleted')
@@ -110,6 +157,7 @@ def deleteStock(request, pk):
     except:
         messages.error(request, 'invalid stock id')
 
+@login_required(login_url='login')
 def saveSale(request):
     form = SaleForm()
     context = {
@@ -152,6 +200,8 @@ def saveSale(request):
                 return redirect('sales')
     
     return render(request, 'base/saleform.html', context)
+
+@login_required(login_url='login')
 #update sales
 def updateSale(request, pk):
     sale = Sale.objects.get(id=pk)
@@ -174,6 +224,7 @@ def updateSale(request, pk):
     
     return render(request, 'base/saleform.html', context)
 
+@login_required(login_url='login')
 def deleteSale(request, pk):
     try:
         sale = Sale.objects.filter(id=pk).delete() 
@@ -181,8 +232,8 @@ def deleteSale(request, pk):
         return redirect('sales')
     except:
         messages.error(request, 'invalid stock id')
-
-
+@permission_required('base.view_Fuel', login_url='fuels')
+@login_required(login_url='login')
 def fuelDetail(request, pk):
     fuel = Fuel.objects.get(id=pk)
     stocks = Stock.objects.filter(fuel__id = fuel.id).all()
@@ -198,6 +249,7 @@ def fuelDetail(request, pk):
     
     return render(request, 'base/fuel_details.html', context)
 
+@login_required(login_url='login')
 def stockView(request):
     fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
     stocks = Stock.objects.filter(fuel__id__in = fuels).all()
@@ -209,7 +261,7 @@ def stockView(request):
     return render(request, 'base/stock_list.html', context)
 
 
-
+@login_required(login_url='login')
 #sale view
 def saleView(request):
     fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
@@ -220,6 +272,8 @@ def saleView(request):
     }
     return render(request, 'base/sale_list.html', context)
 
+
+@login_required(login_url='login')
 def inventoryView(request):
     fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
 

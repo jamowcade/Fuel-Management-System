@@ -33,8 +33,8 @@
                                 <td>${{sale.amount}}</td>
                                 <td>{{sale.created}}</td>
                                 <td>
-                                    <a href=""><button class="btn btn-info">update</button></a>
-                                    <a href=""><button class="btn btn-danger">Delete</button></a>
+                                    <a href="{% url 'update_sale' sale.id %}"><button class="btn btn-info">update</button></a>
+                                    <a href="{% url 'delete_sale' sale.id %}" onclick="return confirm('Are you sure you want to delete this item?');"><button class="btn btn-danger">Delete</button></a>
                                 </td>
 
                             </tr>

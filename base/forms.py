@@ -7,6 +7,7 @@ class FuelForm(ModelForm):
     class Meta:
         model = Fuel
         fields = ['name','price']
+    
 
 
 class StockForm(ModelForm):

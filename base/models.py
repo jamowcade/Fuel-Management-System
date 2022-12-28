@@ -8,6 +8,8 @@ class Fuel(models.Model):
     name = models.CharField(max_length=100, unique=True)
     price = models.FloatField(max_length=(15,2), default=0)
     user = models.CharField(max_length=100, blank=True)
+    status = models.CharField(max_length=2,choices=(('1','Active'),('0', 'Inactive')) , default = 1)
+    delete_flag = models.IntegerField(default = 0)
     created = models.DateTimeField(auto_now=True)
     updated = models.DateTimeField(auto_now_add=True)
 

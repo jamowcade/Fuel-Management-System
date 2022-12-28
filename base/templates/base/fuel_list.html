@@ -18,7 +18,8 @@
                             <th>Fuel Type</th>
                             <th>Price</th>
                             <th>Created Date</th>
-                            <!-- <th>Action</th> -->
+                            <th>Update</th>
+                            <th>Delete</th>
                         </thead>
                         <tbody>
                             <tr>
@@ -28,10 +29,10 @@
                                 <td><a href="{% url 'fuel_detail' fuel.id %}">{{fuel}}</a></td>
                                 <td>${{fuel.price}}</td>
                                 <td>{{fuel.created}}</td>
-                                <!-- <td>
-                                    <a href=""><button class="btn btn-info">update</button></a>
-                                    <a href=""><button class="btn btn-danger">Delete</button></a>
-                                </td> -->
+                                <td>
+                                    <a href="{% url 'update_fuel' fuel.id %}"><button class="btn btn-info">update</button></a>
+                                    <a href="{% url 'delete_fuel' fuel.id %}" onclick="return confirm('Are you sure you want to delete this item?');" ><button class="btn btn-danger">Delete</button></a>
+                                </td>
 
                             </tr>
                             {% endfor %}
@@ -42,6 +43,10 @@
         </div>
     </div>
 
-   
+    <script>
+        function myFunction() {
+          confirm("Are you sure you want to delete this");
+        }
+    </script>
 
 {% endblock %}

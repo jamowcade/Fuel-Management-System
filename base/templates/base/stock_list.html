@@ -6,7 +6,7 @@
 <br>
     <div class="container justify-content-center">
      <div>
-        {% if perms.base.add_Stock %}
+        {% if perms.base.add_stock %}
         <a href="{% url 'new_stock' %}"><button class="btn btn-primary">Add New Stock</button></a>
      {% endif  %}
     </div>

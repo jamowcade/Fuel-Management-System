@@ -5,7 +5,7 @@
 <br>
     <div class="container justify-content-center">
      <div>
-        {% if perms.base.add_Fuel %}
+        {% if perms.base.add_fuel %}
 
         <a href="{% url 'new_fuel' %}"><button class="btn btn-primary">Add Fuel Type</button></a>
         {% endif %}
@@ -22,8 +22,10 @@
                             <th>Fuel Type</th>
                             <th>Price</th>
                             <th>Created Date</th>
+                            {% if perms.base.add_fuel %}
                             <th>Update</th>
                             <th>Delete</th>
+                            {% endif %}
                         </thead>
                         <tbody>
                             <tr>
@@ -34,7 +36,7 @@
                                 <td>${{fuel.price}}</td>
                                 <td>{{fuel.created}}</td>
                                 <td>
-                                    {% if perms.base.add_Fuel %}
+                                    {% if perms.base.add_fuel %}
                                     <a href="{% url 'update_fuel' fuel.id %}"><button class="btn btn-info">update</button></a>
                                     
                                 </td>

@@ -6,9 +6,19 @@ from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required, permission_required
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 
 # Create your views here.
+
+def addUser(request):
+    form = UserCreationForm()
+    
+    context = {
+        "form":form
+    }
+    return render(request, 'base/register.html', context)
+
 
 #login user.
 
@@ -64,8 +74,8 @@ def fuelView(request):
         "fuels":fuels
     }
     return render(request, 'base/fuel_list.html', context)
-
-@permission_required('base.add_Fuel', login_url='login')
+@login_required(login_url='login')
+@permission_required('base.add_fuel', raise_exception=True)
 def saveFuel(request):
     form = FuelForm()
     if request.method == 'POST':
@@ -102,6 +112,19 @@ def deleteFuel(request, pk = None):
     fuel = Fuel.objects.filter(id=pk).update(delete_flag=1)
     messages.success(request, f"Fuel {fuel} has been deleted successfully")
     return redirect('fuels')
+
+
+@login_required(login_url='login')
+@permission_required('base.view_stock', raise_exception=True)
+def stockView(request):
+    fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
+    stocks = Stock.objects.filter(fuel__id__in = fuels).all()
+    context = {
+        "stocks":stocks,
+        "fuels":fuels
+    }
+
+    return render(request, 'base/stock_list.html', context)
 
 
 @login_required(login_url='login')
@@ -158,6 +181,7 @@ def deleteStock(request, pk):
         messages.error(request, 'invalid stock id')
 
 @login_required(login_url='login')
+@permission_required('base.add_sale', raise_exception=True)
 def saveSale(request):
     form = SaleForm()
     context = {
@@ -202,6 +226,7 @@ def saveSale(request):
     return render(request, 'base/saleform.html', context)
 
 @login_required(login_url='login')
+@permission_required('base.change_sale', raise_exception=True)
 #update sales
 def updateSale(request, pk):
     sale = Sale.objects.get(id=pk)
@@ -225,6 +250,7 @@ def updateSale(request, pk):
     return render(request, 'base/saleform.html', context)
 
 @login_required(login_url='login')
+@permission_required('base.delete_sale', raise_exception=True)
 def deleteSale(request, pk):
     try:
         sale = Sale.objects.filter(id=pk).delete() 
@@ -232,7 +258,7 @@ def deleteSale(request, pk):
         return redirect('sales')
     except:
         messages.error(request, 'invalid stock id')
-@permission_required('base.view_Fuel', login_url='fuels')
+# @permission_required('base.view_Fuel', login_url='fuels')
 @login_required(login_url='login')
 def fuelDetail(request, pk):
     fuel = Fuel.objects.get(id=pk)
@@ -249,19 +275,11 @@ def fuelDetail(request, pk):
     
     return render(request, 'base/fuel_details.html', context)
 
-@login_required(login_url='login')
-def stockView(request):
-    fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
-    stocks = Stock.objects.filter(fuel__id__in = fuels).all()
-    context = {
-        "stocks":stocks,
-        "fuels":fuels
-    }
 
-    return render(request, 'base/stock_list.html', context)
 
 
 @login_required(login_url='login')
+@permission_required('base.view_sale', raise_exception=True)
 #sale view
 def saleView(request):
     fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
@@ -274,6 +292,7 @@ def saleView(request):
 
 
 @login_required(login_url='login')
+# @permission_required('base.view_inventory', raise_exception=True)
 def inventoryView(request):
     fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
 

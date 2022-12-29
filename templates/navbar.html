@@ -15,6 +15,7 @@
         <div class="collapse navbar-collapse" 
         id="navbarNav">
             <ul class="navbar-nav">
+                {% if request.user.is_authenticated %}
                 <li class="nav-item active">
                     <a href="{% url 'home' %}" class="nav-link active">Home</a>
                 </li>
@@ -31,11 +32,17 @@
                     <a href="{% url 'inventory' %}" class="nav-link">Inventory</a>
                 </li>
                 <li class="nav-item active">
+                    <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                </li>
+                {% else %}
+                <li class="nav-item active">
                     <a href="{% url 'login' %}" class="nav-link">Login</a>
                 </li>
                 <li class="nav-item active">
-                    <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+                    <a href="{% url 'register' %}" class="nav-link">register</a>
                 </li>
+                {% endif %}
+             
             </ul>
         </div>
     </div>

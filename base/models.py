@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.utils import timezone
 # Create your models here.
 
 
@@ -10,8 +10,8 @@ class Fuel(models.Model):
     user = models.CharField(max_length=100, blank=True)
     status = models.CharField(max_length=2,choices=(('1','Active'),('0', 'Inactive')) , default = 1)
     delete_flag = models.IntegerField(default = 0)
-    created = models.DateTimeField(auto_now=True)
-    updated = models.DateTimeField(auto_now_add=True)
+    created = models.DateTimeField(default = timezone.now)
+    updated = models.DateTimeField(auto_now=True)
 
     class Meta:
         ordering = ['-updated','-created']
@@ -42,6 +42,7 @@ class Fuel(models.Model):
 
 # stock manager table.
 class Stock(models.Model):
+    date = models.DateField(null=True, blank = True)
     fuel = models.ForeignKey(Fuel, on_delete=models.CASCADE)
     volume = models.FloatField(max_length=(15,2),default=0)
     user = models.CharField(max_length=100, blank=True)

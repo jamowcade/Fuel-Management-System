@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import FuelForm, StockForm, SaleForm
+from .forms import FuelForm, StockForm, SaleForm, UserForm
 from .models import Fuel, Sale, Stock
 from django.db.models import Sum
 from django.contrib import messages
@@ -10,12 +10,33 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 
 # Create your views here.
+@login_required(login_url='login')
+@permission_required('auth.view_user', raise_exception=True)
+def users(request):
+    users = User.objects.all()
+    context = {
+        "users":users,
+        "page_name": "Users List"
+    }
 
+    return render(request, 'base/users.html', context)
+
+@login_required(login_url='login')
+@permission_required('auth.add_user', raise_exception=True)
 def addUser(request):
     form = UserCreationForm()
-    
+
+    if request.method == 'POST':
+        form = UserCreationForm(request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f'user  added successfully')
+        else:
+            messages.error(request, f'user cannot be saved', extra_tags='danger')
+
     context = {
-        "form":form
+        "form":form,
+        "page_name":"Add New User"
     }
     return render(request, 'base/register.html', context)
 
@@ -23,6 +44,9 @@ def addUser(request):
 #login user.
 
 def loginUser(request):
+    context = {
+        "page_name":"Login"
+    }
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -59,19 +83,22 @@ def home(request):
         "total_fuel":total_fuels,
         "total_sales": total_amount,
         "fuels": fuels,
-        "form":form
+        "form":form,
+        "page_name":"Main Dashboard"
         
     }
     return render(request, 'base/home.html', context)
 
 
 @login_required(login_url='login')
+# @permission_required('base.view_fuel', raise_exception=True)
 def fuelView(request):
     if request.user.groups == 'sales':
         return redirect('home')
-    fuels = Fuel.objects.filter(delete_flag = 0, status = 1).all()
+    fuels = Fuel.objects.filter(delete_flag = 0).all()
     context = {
-        "fuels":fuels
+        "fuels":fuels,
+        "page_name":"Fuel List"
     }
     return render(request, 'base/fuel_list.html', context)
 @login_required(login_url='login')
@@ -87,7 +114,8 @@ def saveFuel(request):
         else:
             messages.warning(request, 'fuel cannot be saved')
     context = {
-        "form":form
+        "form":form,
+        "page_name":"Add New Fuel"
     }
     return render(request, 'base/fuelform.html', context)  
 
@@ -103,7 +131,8 @@ def updateFuel(request, pk):
             messages.success(request, f'fuel {fuel} successfully updated ')
             return redirect('fuels')
     context = {
-        "form":form
+        "form":form,
+        "page_name":"Update Fuel"
 
     }
     return render(request, 'base/fuelform.html', context)
@@ -121,7 +150,8 @@ def stockView(request):
     stocks = Stock.objects.filter(fuel__id__in = fuels).all()
     context = {
         "stocks":stocks,
-        "fuels":fuels
+        "fuels":fuels,
+        "page_name":"Add New Stock"
     }
 
     return render(request, 'base/stock_list.html', context)
@@ -162,7 +192,8 @@ def updateStock(request, pk):
         else:
             messages.error(request, 'form cannot be updated', extra_tags='danger')
     context = {
-        "form":form
+        "form":form,
+        "page_name":"Update Stock"
 
     }
     return render(request, 'base/stockform.html', context)
@@ -185,7 +216,8 @@ def deleteStock(request, pk):
 def saveSale(request):
     form = SaleForm()
     context = {
-        "form":form
+        "form":form,
+        "page_name":"Add New Sale"
     }
     if request.method == 'POST':
         form = SaleForm(request.POST)
@@ -244,7 +276,8 @@ def updateSale(request, pk):
             return redirect('sales')
             messages.success(request, 'sale cannot be updated')
     context = {
-        "form":form
+        "form":form,
+        "page_name":"Update Sale"
     }
     
     return render(request, 'base/saleform.html', context)
@@ -258,7 +291,7 @@ def deleteSale(request, pk):
         return redirect('sales')
     except:
         messages.error(request, 'invalid stock id')
-# @permission_required('base.view_Fuel', login_url='fuels')
+@permission_required('base.view_fuel', login_url='fuels')
 @login_required(login_url='login')
 def fuelDetail(request, pk):
     fuel = Fuel.objects.get(id=pk)
@@ -286,13 +319,14 @@ def saleView(request):
     sales = Sale.objects.filter(fuel__id__in=fuels).all()
 
     context = {
-        "sales":sales
+        "sales":sales,
+        "page_name":"Sales List"
     }
     return render(request, 'base/sale_list.html', context)
 
 
 @login_required(login_url='login')
-# @permission_required('base.view_inventory', raise_exception=True)
+@permission_required('base.view_stock', raise_exception=True)
 def inventoryView(request):
     fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
 

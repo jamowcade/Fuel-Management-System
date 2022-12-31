@@ -12,7 +12,7 @@
     </div>
         <div class="card mb-4 mt-2">
             <div class="card-header">
-                <h4>Fuel List</h4>
+                <h4>{{page_name}}</h4>
             </div>
             <div class="card-body">
                 <div class="container">
@@ -21,6 +21,7 @@
                             <th>No</th>
                             <th>Fuel Type</th>
                             <th>Price</th>
+                            <th>Status</th>
                             <th>Created Date</th>
                             {% if perms.base.add_fuel %}
                             <th>Update</th>
@@ -34,6 +35,7 @@
                                 <td>{{fuel.id}}</td>
                                 <td><a href="{% url 'fuel_detail' fuel.id %}">{{fuel}}</a></td>
                                 <td>${{fuel.price}}</td>
+                                <td>{% if fuel.status == '1' %}Active{% else %}Inactive{% endif %}</td>
                                 <td>{{fuel.created}}</td>
                                 <td>
                                     {% if perms.base.add_fuel %}

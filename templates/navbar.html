@@ -16,34 +16,49 @@
         id="navbarNav">
             <ul class="navbar-nav">
                 {% if request.user.is_authenticated %}
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a href="{% url 'home' %}" class="nav-link active">Home</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a href="{% url 'fuels' %}" class="nav-link">Fuels</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a href="{% url 'stocks' %}" class="nav-link">Stock</a>
                 </li>
-                <li class="nav-item active">
-                    <a href="{% url 'sales' %}" class="nav-link">Sale</a>
+                <li class="nav-item">
+                    <a href="{% url 'sales' %}" class="nav-link">Sales</a>
                 </li>
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a href="{% url 'inventory' %}" class="nav-link">Inventory</a>
                 </li>
-                <li class="nav-item active">
-                    <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+               
+                {% if perms.auth.add_user %}
+                <li class="nav-item">
+                    <a href="{% url 'users' %}" class="nav-link">Users</a>
                 </li>
+                {% endif %}
                 {% else %}
-                <li class="nav-item active">
+                <li class="nav-item">
                     <a href="{% url 'login' %}" class="nav-link">Login</a>
                 </li>
-                <li class="nav-item active">
+                <!-- <li class="nav-item">
                     <a href="{% url 'register' %}" class="nav-link">register</a>
-                </li>
+                </li> -->
+              
                 {% endif %}
              
             </ul>
+
+            
         </div>
+        {% if request.user.is_authenticated %}
+        welcome :<a href="" class="nav-link">{{request.user}}</a>
+        |
+        <small class="nav-item">
+        <a href="{% url 'logout' %}" class="nav-link">Logout</a>
+        </small>
+        {% endif %}
+        
+        
     </div>
 </div>

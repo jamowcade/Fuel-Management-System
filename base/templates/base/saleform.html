@@ -12,7 +12,7 @@
             <div class="col">
                 <div class="cotainer">
                     <div class="card">
-                        <div class="card-header">Add New Sale</div>
+                        <div class="card-header">{{page_name}}</div>
                     
                     <div class="card-body">
                         <form action="" method="POST">
@@ -20,12 +20,13 @@
                             {% for field in form %}
                                 <div class="form-group">
                                     {{field.label}}
-                                    {% if field.error %}
-                                    <p>{{field.error}}</p>
-                                    {% endif %}
+                                   
                                 </div>
                                 <div class="form-group">
                                     {{field}}
+                                    {% for error in field.errors %}
+                                    <p style="color: red;">{{error}}</p>
+                                    {% endfor %}
                                 </div>
                                
                                 

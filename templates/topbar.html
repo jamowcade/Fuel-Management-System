@@ -24,7 +24,7 @@
                             <i class="ti ti-align-right"></i>
                         </a>
                     </li>
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link  " href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Mega Menu
                             <i class="fa fa-angle-down"></i>
                         </a>
@@ -136,7 +136,7 @@
                             <a class="dropdown-item nav-link" href="javascript:void(0)">Another action</a>
                             <a class="dropdown-item nav-link" href="javascript:void(0)">Something else here</a>
                         </div>
-                    </li>
+                    </li> -->
                     <li class="nav-item full-screen d-none d-lg-block" id="btnFullscreen">
                         <a href="javascript:void(0)" class="nav-link expand">
                             <i class="icon-size-fullscreen"></i>
@@ -144,7 +144,7 @@
                     </li>
                 </ul>
                 <ul class="navbar-nav nav-right ml-auto">
-                    <li class="nav-item dropdown">
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown2" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="ti ti-email"></i>
                         </a>
@@ -242,16 +242,16 @@
                                 </li>
                             </ul>
                         </div>
-                    </li>
-                    <li class="nav-item dropdown">
+                    </li> -->
+                    <!-- <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown3" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fe fe-bell"></i>
                             <span class="notify">
                                         <span class="blink"></span>
                             <span class="dot"></span>
                             </span>
-                        </a>
-                        <div class="dropdown-menu extended animated fadeIn" aria-labelledby="navbarDropdown">
+                        </a> -->
+                        <!-- <div class="dropdown-menu extended animated fadeIn" aria-labelledby="navbarDropdown">
                             <ul>
                                 <li class="dropdown-header bg-gradient p-4 text-white text-left">Notifications
                                     <a href="#" class="float-right btn btn-square btn-inverse-light btn-xs m-0">
@@ -341,7 +341,7 @@
                                     </a>
                                 </li>
                             </ul>
-                        </div>
+                        </div> -->
                     </li>
                     <li class="nav-item">
                         <a class="nav-link search" href="javascript:void(0)">
@@ -371,7 +371,7 @@
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="mr-1">
                                         <h4 class="text-white mb-0">{{request.user}}</h4>
-                                        <small class="text-white">Henry@example.com</small>
+                                        <small class="text-white">{{request.email}}</small>
                                     </div>
                                     <a href="{% url 'logout' %}" class="text-white font-20 tooltip-wrapper" data-toggle="tooltip" data-placement="top" title="" data-original-title="Logout"> <i
                                                     class="zmdi zmdi-power"></i></a>

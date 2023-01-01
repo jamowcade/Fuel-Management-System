@@ -4,8 +4,8 @@
 {% endblock title %}
 
 {% block content %}
-    <div class="container mt-5 mb-5 p-10">
-        <div class="row">
+    <div class="container">
+        <div class="row ">
             <div class="col">
                 
             </div> 
@@ -14,30 +14,39 @@
                     <div class="card">
                         <div class="card-header">{{page_name}}</div>
                     
-                    <div class="card-body">
-                        <form action="" method="POST">
-                            {% csrf_token %}
-                            {% for field in form %}
-                            
-                                <div class="form-group">
-                                    {{field.label}}
-                                    
-                                    {% for error in field.errors %}
-                                    <p style="color: red;">{{error}}</p>
-                                    {% endfor %}
-                                </div>
-                                <div class="form-group">
-                                    {{field}}
-                                    {{field.status}}
-                                </div>
-                               
+                    <div class="card-body"> 
+                <form method="POST" action="">                    
+                    {% csrf_token %}
+                    
+                        <div class="form-group">
+                            <label for="inputEmail4">Petrol type</label>
+                            <input type="text" class="form-control" name="name" placeholder="Petrol type name" value="{{fuel.name}}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword4">Price</label>
+                            <input type="number" class="form-control" name="price" placeholder="Price" value="{{fuel.price}}" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="status" class="control-label">Status</label>
+                            <select name="status" id="status" name="status" class="form-select form-select-sm rounded-0" required>
+                                {% if fuel.status == '1' %}
+                                <option value="1" selected>Active</option>
+                                {% else %}
+                                <option value="1">Active</option>
+                                {% endif %}
                                 
-                            
-                            {% endfor %}
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-success">Save</button>
-                            </div>
-                        </form>
+                                {% if fuel.status == '0' %}
+                                <option value="0" selected>Inactive</option>
+                                {% else %}
+                                <option value="0">Inactive</option>
+                                {% endif %}
+                            </select>
+                        </div>
+                   
+                    
+                    <button type="submit" class="btn btn-primary">Save</button>
+                </form>
+                        
                        
                     </div>
                 </div>
@@ -49,6 +58,11 @@
         </div>
         
       
+    </div>
+
+ 
+
+    </div>
     </div>
 
 

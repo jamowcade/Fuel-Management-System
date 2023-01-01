@@ -46,20 +46,23 @@
 
                 {% include 'sidebar.html' %}
                 <div class="app-main" id="main">
+                    
                     <div class="container-fluid">
                         {% for message in messages %}
                         <div class="alert alert-{% if message.extra_tags %}{{message.extra_tags}}{% else %}{{ message.tags }}{% endif %}">
-                          <div class="d-flex w-100">
-                              <div class="col-auto flex-shrink-1 flex-grow-1">
-                                {{ message|safe }}
-                              </div>
-                              <div class="col-auto text-center">
-                                  <button class="btn-close btn-sm text-sm" type="button" onclick="$(this).closest('.alert').remove()">&times;</button>
-                              </div>
+                            <div class="d-flex w-100">
+                                <div class="col-auto flex-shrink-1 flex-grow-1">
+                                  {{ message|safe }}
+                                </div>
+                                <div class="col-auto text-center">
+                                    <button class="btn-close btn-sm text-sm" type="button" onclick="$(this).closest('.alert').remove()">&times;</button>
+                                </div>
+                            </div>
+                            {% endfor %}
                           </div>
-                          {% endfor %}
-                        </div>
+                    
                         {% block content %}
+                        
 
                         {% endblock %}
                     </div>

@@ -67,10 +67,10 @@ def loginUser(request):
 
 def logoutUser(request):
     logout(request)
-    messages.success(request, 'you are looged out')
+    # messages.success(request, 'you are looged out')
     return redirect('login')
 
-# @login_required(login_url='login')
+@login_required(login_url='login')
 def home(request):
     form = SaleForm()
     total_fuels = Fuel.objects.filter(delete_flag=0, status=1).count()
@@ -91,10 +91,14 @@ def home(request):
 
 
 @login_required(login_url='login')
-# @permission_required('base.view_fuel', raise_exception=True)
+@permission_required('base.view_fuel', raise_exception=True)
 def fuelView(request):
-    if request.user.groups == 'sales':
-        return redirect('home')
+    if request.method == 'POST':
+        form = FuelForm()
+        if form.is_valid():
+            form.save()
+            messages.success(request, 'fuel added successfully')
+            return redirect('fuels')
     fuels = Fuel.objects.filter(delete_flag = 0).all()
     context = {
         "fuels":fuels,
@@ -104,7 +108,7 @@ def fuelView(request):
 @login_required(login_url='login')
 @permission_required('base.add_fuel', raise_exception=True)
 def saveFuel(request):
-    form = FuelForm()
+    # form = FuelForm()
     if request.method == 'POST':
         form = FuelForm(request.POST)
         if form.is_valid():
@@ -113,17 +117,17 @@ def saveFuel(request):
             return redirect('fuels')
         else:
             messages.warning(request, 'fuel cannot be saved')
+            return redirect('fuels')
     context = {
-        "form":form,
-        "page_name":"Add New Fuel"
+        "page_name":"Add New Petrol"
     }
     return render(request, 'base/fuelform.html', context)  
 
 @login_required(login_url='login')
 def updateFuel(request, pk):
-    form = FuelForm()
     fuel = Fuel.objects.get(id=pk)
-    form = FuelForm(instance=fuel)
+    form = FuelForm()
+    # form = FuelForm(instance=fuel)
     if request.method == 'POST':
         form = FuelForm(request.POST, instance=fuel)
         if form.is_valid():
@@ -132,13 +136,14 @@ def updateFuel(request, pk):
             return redirect('fuels')
     context = {
         "form":form,
-        "page_name":"Update Fuel"
+        "page_name":"Update Fuel",
+        "fuel":fuel
 
     }
     return render(request, 'base/fuelform.html', context)
 @login_required(login_url='login')
 def deleteFuel(request, pk = None):
-    fuel = Fuel.objects.filter(id=pk).update(delete_flag=1)
+    fuel = Fuel.objects.filter(id=pk).delete()
     messages.success(request, f"Fuel {fuel} has been deleted successfully")
     return redirect('fuels')
 

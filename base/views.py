@@ -70,7 +70,7 @@ def logoutUser(request):
     messages.success(request, 'you are looged out')
     return redirect('login')
 
-@login_required(login_url='login')
+# @login_required(login_url='login')
 def home(request):
     form = SaleForm()
     total_fuels = Fuel.objects.filter(delete_flag=0, status=1).count()
@@ -87,7 +87,7 @@ def home(request):
         "page_name":"Main Dashboard"
         
     }
-    return render(request, 'base/home.html', context)
+    return render(request, 'base/index.html', context)
 
 
 @login_required(login_url='login')

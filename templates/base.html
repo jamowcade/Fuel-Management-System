@@ -1,0 +1,88 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <meta name="description" content="Admin template that can be used to build dashboards for CRM, CMS, etc." />
+    <meta name="author" content="Potenza Global Solutions" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <!-- app favicon -->
+    <link rel="shortcut icon" href="{% static 'assets/img/favicon.ico' %}">
+    <!-- google fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    <!-- plugin stylesheets -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/vendors.css' %}" />
+    <!-- app style -->
+    <link rel="stylesheet" type="text/css" href="{% static 'assets/css/style.css' %}" />
+
+</head>
+
+<body>
+    <!-- begin app -->
+    <div class="app">
+        <!-- begin app-wrap -->
+        <div class="app-wrap">
+            <!-- begin pre-loader -->
+            <div class="loader">
+                <div class="h-100 d-flex justify-content-center">
+                    <div class="align-self-center">
+                        <img src="{% static 'assets/img/loader/loader.svg' %}" alt="loader">
+                    </div>
+                </div>
+            </div>
+            <!-- end pre-loader -->
+            <!-- begin app-header -->
+            {% include 'topbar.html' %}
+            <!-- end app-header -->
+           
+             
+             
+            <!-- begin app-container -->
+            <div class="app-container">
+
+                {% include 'sidebar.html' %}
+                <div class="app-main" id="main">
+                    <div class="container-fluid">
+                        {% for message in messages %}
+                        <div class="alert alert-{% if message.extra_tags %}{{message.extra_tags}}{% else %}{{ message.tags }}{% endif %}">
+                          <div class="d-flex w-100">
+                              <div class="col-auto flex-shrink-1 flex-grow-1">
+                                {{ message|safe }}
+                              </div>
+                              <div class="col-auto text-center">
+                                  <button class="btn-close btn-sm text-sm" type="button" onclick="$(this).closest('.alert').remove()">&times;</button>
+                              </div>
+                          </div>
+                          {% endfor %}
+                        </div>
+                        {% block content %}
+
+                        {% endblock %}
+                    </div>
+                    
+                </div>
+               
+            </div>
+            </div>
+            
+            <!-- end app-container -->
+            {% include 'footer.html' %}
+          
+        </div>
+        <!-- end app-wrap -->
+    </div>
+    <!-- end app -->
+
+    <!-- plugins -->
+    <script src="{% static 'assets/js/vendors.js' %}"></script>
+
+    <!-- custom app -->
+    <script src="{% static 'assets/js/app.js' %}"></script>
+</body>
+
+
+</html>

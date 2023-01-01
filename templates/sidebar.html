@@ -28,11 +28,13 @@
             </ul>
         </li>
       
-        <li class="nav-static-title">Sales</li>
+        <li class="nav-static-title">Sales and Inventory</li>
         <li><a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-calendar"></i><span class="nav-title">Sales</span></a>
             <ul aria-expanded="false">
                 <li> <a href='{% url 'new_sale' %}'>Add New</a> </li>
                 <li> <a href='{% url 'sales' %}'>view all</a> </li>
+                <li> <a href='{% url 'inventory' %}'>Inventory</a> </li>
+
             </ul>
         </li>
       
@@ -44,7 +46,7 @@
             <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-map-alt"></i><span class="nav-title">Users</span></a>
             <ul aria-expanded="false">
                 <li> <a href="maps-google.html">Add new</a> </li>
-                <li> <a href="maps-vector.html">View all</a> </li>
+                <li> <a href="{% url 'users' %}">View all</a> </li>
             </ul>
         </li>
         <li>
@@ -62,7 +64,7 @@
             </ul>
         </li>
         <li>
-            <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-list"></i><span class="nav-title">Multi Level</span></a>
+            <!-- <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-list"></i><span class="nav-title">Multi Level</span></a>
             <ul aria-expanded="false">
                 <li> <a href="javascript: void(0);">Level 1.1</a> </li>
                 <li class="scoop-hasmenu">
@@ -72,7 +74,7 @@
                         <li> <a href="javascript: void(0);">Level 2.2</a> </li>
                     </ul>
                 </li>
-            </ul>
+            </ul> -->
         </li>
        
     </ul>

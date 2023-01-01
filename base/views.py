@@ -77,8 +77,9 @@ def home(request):
     fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
 
     total_amount = Sale.objects.filter(fuel__id__in = fuels).aggregate(Sum('amount'))['amount__sum']
+    
     print(total_amount)
-    print(total_fuels)
+    # print(total_fuels)
     context = {
         "total_fuel":total_fuels,
         "total_sales": total_amount,
@@ -165,9 +166,12 @@ def stockView(request):
 @login_required(login_url='login')
 @permission_required('base.add_fuel', raise_exception=True)
 def saveStock(request):
+    fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
     form = StockForm()
     context = {
-        "form":form
+        "form":form,
+        "fuels":fuels,
+        "page_name": "Add new Stock"
     }
     if request.method == 'POST':
         form = StockForm(request.POST)
@@ -175,6 +179,10 @@ def saveStock(request):
             form.save()
             messages.success(request, 'Stock added successfully')
             return redirect('stocks')
+        else:
+            messages.warning(request, 'Stock didnot saved')
+            return redirect('stocks')
+
     
     return render(request, 'base/stockform.html', context)
 
@@ -187,6 +195,7 @@ def updateStock(request, pk):
     #     return redirect('stocks')
     form = StockForm()
     stock = Stock.objects.get(id=pk)
+    fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
     form = StockForm(instance=stock)
     if request.method == 'POST':
         form = StockForm(request.POST, instance=stock)
@@ -198,7 +207,9 @@ def updateStock(request, pk):
             messages.error(request, 'form cannot be updated', extra_tags='danger')
     context = {
         "form":form,
-        "page_name":"Update Stock"
+        "page_name":"Update Stock",
+        "stock":stock,
+        "fuels":fuels
 
     }
     return render(request, 'base/stockform.html', context)
@@ -219,10 +230,12 @@ def deleteStock(request, pk):
 @login_required(login_url='login')
 @permission_required('base.add_sale', raise_exception=True)
 def saveSale(request):
+    fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
     form = SaleForm()
     context = {
         "form":form,
-        "page_name":"Add New Sale"
+        "page_name":"Add New Sale",
+        "fuels":fuels
     }
     if request.method == 'POST':
         form = SaleForm(request.POST)
@@ -267,6 +280,7 @@ def saveSale(request):
 #update sales
 def updateSale(request, pk):
     sale = Sale.objects.get(id=pk)
+    fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
     form  = SaleForm(instance=sale)
     if request.method == 'POST':
         form = SaleForm(request.POST, instance=sale)
@@ -278,11 +292,13 @@ def updateSale(request, pk):
             messages.success(request, 'sale updated')
             return redirect('sales')
         else:
-            return redirect('sales')
+            return redirect('home')
             messages.success(request, 'sale cannot be updated')
     context = {
         "form":form,
-        "page_name":"Update Sale"
+        "page_name":"Update Sale",
+        "sale":sale,
+        "fuels":fuels
     }
     
     return render(request, 'base/saleform.html', context)

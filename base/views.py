@@ -70,6 +70,14 @@ def logoutUser(request):
     # messages.success(request, 'you are looged out')
     return redirect('login')
 
+
+def userProfile(request):
+
+    context = {
+
+    }
+    return render(request, 'base/profile.html', context)
+
 @login_required(login_url='login')
 def home(request):
     form = SaleForm()
@@ -118,9 +126,10 @@ def saveFuel(request):
             return redirect('fuels')
         else:
             messages.warning(request, 'fuel cannot be saved')
-            return redirect('fuels')
+            return redirect('new_fuel')
     context = {
-        "page_name":"Add New Petrol"
+        "page_name":"Add New Petrol",
+        "form":form
     }
     return render(request, 'base/fuelform.html', context)  
 
@@ -157,7 +166,7 @@ def stockView(request):
     context = {
         "stocks":stocks,
         "fuels":fuels,
-        "page_name":"Add New Stock"
+        "page_name":"Stock List"
     }
 
     return render(request, 'base/stock_list.html', context)
@@ -232,12 +241,8 @@ def deleteStock(request, pk):
 def saveSale(request):
     fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
     form = SaleForm()
-    context = {
-        "form":form,
-        "page_name":"Add New Sale",
-        "fuels":fuels
-    }
     if request.method == 'POST':
+        print(request.POST)
         form = SaleForm(request.POST)
         if form.is_valid():
             sale = form.save(commit=False)
@@ -272,6 +277,12 @@ def saveSale(request):
                 sale.save()
                 messages.success(request, 'Sale added successfully')
                 return redirect('sales')
+    context = {
+        "form":form,
+        "page_name":"Add New Sale",
+        "fuels":fuels
+    }
+    
     
     return render(request, 'base/saleform.html', context)
 
@@ -352,6 +363,7 @@ def inventoryView(request):
     fuels = Fuel.objects.filter(delete_flag=0, status=1).all()
 
     context = {
-        "fuels":fuels
+        "fuels":fuels,
+        "page_name": "Inventory"
     }
     return render(request, 'base/inventory.html', context)

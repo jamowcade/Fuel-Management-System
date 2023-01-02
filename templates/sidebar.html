@@ -6,7 +6,6 @@
             <a class="has-arrow" href="javascript:void(0)" aria-expanded="false">
                 <i class="nav-icon ti ti-rocket"></i>
                 <span class="nav-title">Dashboards</span>
-                <span class="nav-label label label-danger">9</span>
             </a>
             <ul aria-expanded="false">
                 <li class="active"> <a href='{% url 'home' %}'>Home</a> </li>
@@ -15,15 +14,19 @@
     
             </ul>
         </li>
-        <li><a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-calendar"></i><span class="nav-title">Petrol</span></a>
+        <li><a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-calendar"></i><span class="nav-title">Fuel Type</span><span class="nav-label label label-primary">{{fuels.count}}</span></a>
             <ul aria-expanded="false">
+                {% if perms.base.add_fuel %}
                 <li> <a href='{% url 'new_fuel' %}'>Add New</a> </li>
+                {% endif %}
                 <li> <a href='{% url 'fuels' %}'>view all</a> </li>
             </ul>
         </li>
-        <li><a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-calendar"></i><span class="nav-title">Stock</span></a>
+        <li><a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-calendar"></i><span class="nav-title">Stocks</span><span class="nav-label label label-primary">{{stocks.count}}</span></a>
             <ul aria-expanded="false">
+                {% if perms.base.add_stock %}
                 <li> <a href='{% url 'new_stock' %}'>Add New</a> </li>
+                {% endif %}
                 <li> <a href='{% url 'stocks' %}'>view all</a> </li>
             </ul>
         </li>
@@ -31,7 +34,9 @@
         <li class="nav-static-title">Sales and Inventory</li>
         <li><a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-calendar"></i><span class="nav-title">Sales</span></a>
             <ul aria-expanded="false">
+                {% if perms.base.add_sale %}
                 <li> <a href='{% url 'new_sale' %}'>Add New</a> </li>
+                {% endif %}
                 <li> <a href='{% url 'sales' %}'>view all</a> </li>
                 <li> <a href='{% url 'inventory' %}'>Inventory</a> </li>
 
@@ -40,20 +45,20 @@
       
        
      
-   
+        {% if perms.auth.add_user %}
         <li class="nav-static-title">Auth Management</li>
         <li>
             <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-map-alt"></i><span class="nav-title">Users</span></a>
             <ul aria-expanded="false">
-                <li> <a href="maps-google.html">Add new</a> </li>
-                <li> <a href="{% url 'users' %}">View all</a> </li>
+                <li> <a href="">Add new</a> </li>
+                <li> <a href="">View all</a> </li>
             </ul>
         </li>
         <li>
-            <!-- <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-layers"></i><span class="nav-title">Groups</span><span class="nav-label label label-primary">12</span></a> -->
+            <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-layers"></i><span class="nav-title">Groups</span><span class="nav-label label label-primary">{{total_group}}</span></a>
             <ul aria-expanded="false">
-                <li> <a href="page-account-settings.html">Add new</a> </li>
-                <li> <a href="page-clients.html">View all</a> </li>
+                <li> <a href="">Add new</a> </li>
+                <li> <a href="">View all</a> </li>
             </ul>
         </li>
         <li>
@@ -63,6 +68,7 @@
                 <li> <a href="#">view All</a> </li>
             </ul>
         </li>
+        {% endif %}
         <li>
             <!-- <a class="has-arrow" href="javascript:void(0)" aria-expanded="false"><i class="nav-icon ti ti-list"></i><span class="nav-title">Multi Level</span></a>
             <ul aria-expanded="false">

@@ -130,7 +130,7 @@
                 <div class="card card-statistics h-100 mb-0">
                     <div class="card-header d-flex align-items-center justify-content-between">
                         <div class="card-heading">
-                            <h4 class="card-title">Top selling Petrols</h4>
+                            <h4 class="card-title">Fuel Prices</h4>
                         </div>
                         <div class="dropdown">
                             <a class="btn btn-xs" href="#!">Export <i class="zmdi zmdi-download pl-1"></i> </a>
@@ -138,7 +138,7 @@
                     </div>
                     <div class="card-body scrollbar scroll_dark pt-0" style="max-height: 350px;">
                         <div class="datatable-wrapper table-responsive">
-                            <table id="datatable" class="table table-borderless table-striped">
+                            <table id="datatable" class="table table-borderless table-light">
                                 <thead>
                                     <tr>
                                         <th>#</th>
@@ -146,7 +146,7 @@
                                         <th>Price</th>
                                         <th>In stock</th>
                                         <th>Status</th>
-                                        <th>Action</th>
+                                        <!-- <th>Action</th> -->
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -160,7 +160,7 @@
                                            {{fuel.available}} L
                                         </td>
                                         <td><span class="badge badge-success-inverse">{% if fuel.status == '1' %}Active{% else %}Inactive{% endif %}</span></td>
-                                        <td> <a class="mr-3" href="javascript:void(0);"><i class="fe fe-edit"></i></a><a href="javascript:void(0);"><i class="fe fe-trash-2"></i></a></td>
+                                        <!-- <td> <a class="mr-3" href="javascript:void(0);"><i class="fe fe-edit"></i></a><a href="javascript:void(0);"><i class="fe fe-trash-2"></i></a></td> -->
                                     {% endfor %}
                                     </tr>
                                     

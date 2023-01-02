@@ -1,55 +1,99 @@
-{% extends 'main.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
-<div class="container-fluid">
-    <div class="row justify-content-center">
-        <div class="col-lg-6 col-md-8 col-sm-12 col-xs-12">
-            <div class="card card-default rounded-0 shadow">
-                <div class="card-header">
-                    <h4 class="card-title"><b>Update Account Details</b></h4>
-                </div>
-                <div class="card-body">
-                    <div class="container-fluid">
-                        <form id="update-user" method="POST" action="{% url 'update-profile' %}" enctype="multipart/form-data">
-                            {% csrf_token %}
-                            <div class="mdc-layout-grid">
-                                <div class="mdc-layout-grid__inner">
-                                    <div class="form-group mb-3">
-                                        <label for="first_name" class="control-label">First Name</label>
-                                        <input type="text" class="form-control rounded-0" name="first_name" id="first_name" value="{% if form.data.first_name %}{{ form.data.first_name }}{% else %}{{ user.first_name }}{% endif %}" required="required">
+<div class="row account-contant">
+    <div class="col-12">
+        <div class="card card-statistics">
+            <div class="card-body p-0">
+                <div class="row no-gutters">
+                    <div class="col-xl-3 pb-xl-0 pb-5 border-right">
+                        <div class="page-account-profil pt-5">
+                            <div class="profile-img text-center rounded-circle">
+                                <div class="pt-5">
+                                    <div class="bg-img m-auto">
+                                        {{user.avatar}}
                                     </div>
-                                    <div class="form-group mb-3">
-                                        <label for="last_name" class="control-label">Last Name</label>
-                                        <input type="text" class="form-control rounded-0" name="last_name" id="last_name" value="{% if form.data.last_name %}{{ form.data.last_name }}{% else %}{{ user.last_name }}{% endif %}" required="required">
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="username" class="control-label">Username</label>
-                                        <input type="text" class="form-control rounded-0" name="username" id="username" value="{% if form.data.username %}{{ form.data.username }}{% else %}{{ user.username }}{% endif %}" required="required">
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="email" class="control-label">Email</label>
-                                        <input type="email" class="form-control rounded-0" name="email" id="email" value="{% if form.data.email %}{{ form.data.email }}{% else %}{{ user.email }}{% endif %}" required="required">
-                                    </div>
-                                    <div class="form-group mb-3">
-                                        <label for="current_password" class="control-label">Enter Password</label>
-                                        <input type="password" class="form-control rounded-0" name="current_password" id="current_password" required="required">
-                                    </div>
-                                    {% for field in form %} {% for error in field.errors %}
-                                    <div class="alert alert-danger my-2">
-                                        <p>{{ error }}</p>
-                                    </div>
-                                    {% endfor %} {% endfor %}
-                                    <div class="form-group mb-3">
-                                        <div class="d-flex w-100 justify-content-end">
-                                            <button class="btn btn-sm rounded-0 btn-primary col-4">
-                                                    Login
-                                                </button>
-                                        </div>
+                                    <div class="profile pt-4">
+                                        <h4 class="mb-1">{{request.user}}</h4>
+                                        <p>{{request.email}}</p>
                                     </div>
                                 </div>
                             </div>
-                        </form>
+
+                        
+                            <div class="profile-btn text-center">
+                                <div><button class="btn btn-light text-primary mb-2">Upload New Avatar</button></div>
+                                <div><button class="btn btn-danger">Delete</button></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-5 col-md-6 col-12 border-t border-right">
+                        <div class="page-account-form">
+                            <div class="form-titel border-bottom p-3">
+                                <h5 class="mb-0 py-2">Edit Your Personal Settings</h5>
+                            </div>
+                            <div class="p-4">
+                                <form>
+                                    <div class="form-row">
+                                        <div class="form-group col-md-12">
+                                            <label for="name1">First Name</label>
+                                            <input type="text" class="form-control" name="first_name" value="{{user.first_name}}">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="title1">Last name</label>
+                                            <input type="text" class="form-control" name="last_name" value="{{user.last_name}}">
+                                        </div>
+                                        <div class="form-group col-md-12">
+                                            <label for="email1">Email</label>
+                                            <input type="email" class="form-control" name="email1" value="{{user.email}}">
+                                        </div>
+                                    </div>
+                         
+                                    <button type="submit" class="btn btn-primary">Update Information</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-4 col-md-6 border-t col-12">
+                        <div class="page-account-form">
+                            <div class="form-titel border-bottom p-3">
+                                <h5 class="mb-0 py-2">Update Your Password</h5>
+                            </div>
+                            <div class="p-4">
+                                <form>
+                                    <div class="form-group">
+                                        <label for="fb">Current Password</label>
+                                        <input type="text" class="form-control" id="fb" value="https://www.facebook.com/">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="tr">new Password</label>
+                                        <input type="text" class="form-control" id="tr" value="https://twitter.com/">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="br">Blogger</label>
+                                        <input type="text" class="form-control" id="br" value="https://www.blogger.com/">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="go">Google+ URL:</label>
+                                        <input type="text" class="form-control" id="go" value="https://plus.google.com/discover">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="li">LinkedIn URL:</label>
+                                        <input type="text" class="form-control" id="li" value="https://in.linkedin.com/">
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="we">Website URL:</label>
+                                        <input type="text" class="form-control" id="we" value="https://yourwebsite.com/">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Save & Update</button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

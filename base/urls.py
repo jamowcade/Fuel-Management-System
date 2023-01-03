@@ -22,7 +22,13 @@ urlpatterns = [
     path('logout/', views.logoutUser, name="logout" ),
     path('register/', views.addUser, name="register" ),
     path('users/', views.users, name="users" ),
-    path('profile/', views.userProfile, name="profile" )
+    path('profile/', views.userProfile, name="profile" ),
+    path('update_password/', views.updatePassword, name="update_password" ),
+    path('edit_user/<str:pk>/', views.editUser, name="edit_user" ),
+    path('delete_user/<str:pk>/', views.deleteUser, name="delete_user"),
+
+
+
 
 
 

@@ -1,10 +1,10 @@
 from django.shortcuts import render, redirect
-from .forms import FuelForm, StockForm, SaleForm, UserForm
+from .forms import FuelForm, StockForm, SaleForm, UpdateProfile, UpdatePasswords, userUpdate
 from .models import Fuel, Sale, Stock
 from django.db.models import Sum
 from django.contrib import messages
 from django.contrib.auth.models import User
-from django.contrib.auth import login, logout, authenticate
+from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
@@ -31,6 +31,7 @@ def addUser(request):
         if form.is_valid():
             form.save()
             messages.success(request, f'user  added successfully')
+            return redirect('users')
         else:
             messages.error(request, f'user cannot be saved', extra_tags='danger')
 
@@ -41,8 +42,9 @@ def addUser(request):
     return render(request, 'base/register.html', context)
 
 
-#login user.
 
+
+#login user.
 def loginUser(request):
     context = {
         "page_name":"Login"
@@ -70,15 +72,67 @@ def logoutUser(request):
     # messages.success(request, 'you are looged out')
     return redirect('login')
 
-
+@login_required(login_url='login')
 def userProfile(request):
-
+    user = User.objects.get(id = request.user.id)
+    user_form = UpdateProfile()
+    if request.method == 'POST':
+        user_form = UpdateProfile(request.POST, instance=user)
+        if user_form.is_valid():
+            user_form.save()
+            messages.success(request, 'user updated')
+            return redirect('profile')
+    else:
+        user_form = UpdateProfile(instance=user)
     context = {
-
+        "user_form":user_form
     }
     return render(request, 'base/profile.html', context)
 
 @login_required(login_url='login')
+def updatePassword(request):
+    form = UpdatePasswords(request.user)
+    context = {
+        "form":form
+    }
+    if request.method == 'POST':
+        form = UpdatePasswords(user = request.user, data= request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request,"Your Account Password has been updated successfully")
+            update_session_auth_hash(request, form.user)
+            return redirect("profile")
+        else:
+            context['form'] = form
+    else:
+        form = UpdatePasswords(request.POST)
+        context['form'] = form
+
+    return render(request, 'base/update_password.html', context)
+
+@login_required(login_url='login')
+@permission_required('auth.change_user', raise_exception=True)
+def editUser(request, pk):
+    user = User.objects.get(id=pk)
+    form = userUpdate(instance = user)
+    if request.method == 'POST':
+        form = userUpdate(request.POST, instance=user)
+        if form.is_valid():
+            form.save()
+            return redirect('users')
+    
+    context = {
+        "form":form
+    }
+
+    return render(request, 'base/edit_user.html', context)
+
+def deleteUser(request, pk):
+    user = User.objects.get(id=pk).delete()
+    return redirect(users)
+
+@login_required(login_url='login')
+# @permission_required('base.view_fuel', raise_exception=True)
 def home(request):
     form = SaleForm()
     total_fuels = Fuel.objects.filter(delete_flag=0, status=1).count()
@@ -117,7 +171,7 @@ def fuelView(request):
 @login_required(login_url='login')
 @permission_required('base.add_fuel', raise_exception=True)
 def saveFuel(request):
-    # form = FuelForm()
+    form = FuelForm()
     if request.method == 'POST':
         form = FuelForm(request.POST)
         if form.is_valid():

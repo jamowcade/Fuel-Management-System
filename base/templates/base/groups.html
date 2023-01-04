@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% block title %}Fuel List{% endblock %}
+
+{% block content %}
+<br>
+    <div class="container justify-content-center">
+     <div card>
+        <div class="card-header">
+            Add new Group
+        </div>
+        <div class="card-body">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group">
+                    <div class="row">
+                        <div class="col">
+                            <input type="text" class="form-control" name="name" placeholder="Group name">
+    
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-primary">submit</button>
+    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+       
+        <!-- {% if perms.auth.add_user %}
+
+        <a href="{% url 'register' %}"></a>
+        {% endif %} -->
+    </div>
+        <div class="card mb-4 mt-2">
+            <div class="card-header">
+                <h4>{{page_name}}</h4>
+            </div>
+            <div class="card-body scrollbar scroll_dark pt-0" style="max-height: 350px;">
+                <div class="container">
+                    <table id ="datatable" class="table table-borderless">
+                        <thead table-bold>
+                            <th>#</th>
+                            <th>name</th>
+                            
+                            {% if perms.auth.add_group %}
+                            <th>Action</th>
+                            {% endif %}
+                            <hr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                {% for group in groups %}
+                                <td>{{forloop.counter}}</td>
+                                <td>{{group.name}}</a></td>
+                                <td>
+                                    {% if perms.auth.add_group %}
+                                    <a class="mr-3" href=""><i class="fe fe-edit"></i></a><a href="{% url 'delete_group' group.id %}" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fe fe-trash-2"></i></a>
+                                </td>
+                                {% endif %}
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- <script>
+        function myFunction() {
+          confirm("Are you sure you want to delete this");
+        }
+    </script> -->
+
+{% endblock %}

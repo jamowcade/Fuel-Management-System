@@ -3,13 +3,24 @@ from .forms import FuelForm, StockForm, SaleForm, UpdateProfile, UpdatePasswords
 from .models import Fuel, Sale, Stock
 from django.db.models import Sum
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 
 
 # Create your views here.
+
+
+#get all users.
+"""
+METHOD: GET
+   get all the users in the system. login is required with @login_required decorator.
+   if user is not logged in redirects to login page. 
+    :param users: iterable of users
+    :param page_name: page name a string used  to display in the template. "users List
+
+"""
 @login_required(login_url='login')
 @permission_required('auth.view_user', raise_exception=True)
 def users(request):
@@ -21,6 +32,18 @@ def users(request):
 
     return render(request, 'base/users.html', context)
 
+
+#create new user.
+"""
+    METHOD: POST.
+    adds new user to the system. login is required with @login_required decorator.
+    if user is not aunthenticated it redirects to login page. permission 'auth.add_user' is required.
+    required fields: (username, password1, password2).
+    if form data is valid it is saved and  success message is displayed else error is raised.
+    :param form: instance of userCreationForm used to display a form in template.
+    :param page_name: page name a string used  to display in the page name in template.
+
+"""
 @login_required(login_url='login')
 @permission_required('auth.add_user', raise_exception=True)
 def addUser(request):
@@ -41,10 +64,19 @@ def addUser(request):
     }
     return render(request, 'base/register.html', context)
 
-
-
-
 #login user.
+"""
+    METHOD: POST
+    login user to the system.
+    username and password is checked,
+    if user exists and not none, user is logged in, else
+    error is raised.
+    :param username: user name 
+    : Password: user password
+    :param page_name: page name a string used  to display in the page name in template.
+
+"""
+
 def loginUser(request):
     context = {
         "page_name":"Login"
@@ -67,11 +99,33 @@ def loginUser(request):
     
     return render(request, 'base/login.html')
 
+
+#logout user
+"""
+    logout user from the system.
+    logout method from django.contrib.auth is used.
+    user session is destroyed. 
+    and then redirects the user to login page.
+"""
+
 def logoutUser(request):
     logout(request)
     # messages.success(request, 'you are looged out')
     return redirect('login')
 
+
+#edit user profile.
+"""
+    METHOD: POST
+    edit user profile.
+    a user can edit his/her information such as (first_name, last_name, email, picture)
+    only logged in users can edit their profile. 
+    UpdateProfile form from forms.py is used, if form data is valid it is saved and success message
+    is displayed else error message is displayed.
+    :param user: user object retrieved from the current session. (request.user) 
+    :parem user_form: instance of UserchangeForm, here UpdateProfile form imported from the forms.py.
+
+"""
 @login_required(login_url='login')
 def userProfile(request):
     user = User.objects.get(id = request.user.id)
@@ -82,6 +136,8 @@ def userProfile(request):
             user_form.save()
             messages.success(request, 'user updated')
             return redirect('profile')
+        else:
+            messages.error(request, 'user is not updated', extra_tags='danger')
     else:
         user_form = UpdateProfile(instance=user)
     context = {
@@ -421,3 +477,52 @@ def inventoryView(request):
         "page_name": "Inventory"
     }
     return render(request, 'base/inventory.html', context)
+
+
+#groups.
+def addGroup(request):
+    groups = Group.objects.all()
+    if request.method == 'POST':
+        name = request.POST.get('name')
+        if name != "":
+            if len(Group.objects.filter(name=name)) == 0:
+                group = Group(name=name)
+                group.save()
+
+    context = {
+        "groups":groups,
+        "page_name":"Group List"
+    }
+    return render(request, 'base/groups.html', context)
+
+
+def deleteGroup(request, pk):
+    group = Group(id=pk)
+    group.delete()
+    return redirect('groups')
+
+def userGroup(request, pk):
+    groups = Group.objects.all()
+    user = User.objects.get(id=pk)
+    user_group = [i for i in user.groups.all()]
+    print(user_group)
+    
+    if request.method == 'POST':
+        gname = request.POST.get('gname')
+        group = Group.objects.get(id=gname)
+        user = User.objects.get(id=pk)
+        user.groups.add(group)
+    context = {
+        "groups": groups,
+        "user_group": user_group
+    }
+
+    return render(request, 'base/user_groups.html', context)
+
+def del_user_group(request, pk, name):
+    group = Group.objects.get(name=name)
+    user = User.objects.get(id=pk)
+    print(user)
+    print(group)
+    user.groups.remove(group)
+    # return redirect('user_group')

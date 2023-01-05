@@ -32,7 +32,7 @@ class userUpdate(ModelForm):
     username = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm rounded-0'}), label="User name")
     # groups = forms.MultipleChoiceField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm rounded-0'}), label="Groups")
     email = forms.CharField(widget=forms.EmailInput(attrs={'class':'form-control form-control-sm rounded-0'}), label="Email")
-
+    # groups = forms.MultipleChoiceFieldwidget=forms.TextInput(attrs={'class':'form-control' }),label="groups")
 
 
     class Meta:

@@ -44,21 +44,19 @@
                             <th>#</th>
                             <th>name</th>
                             
-                            {% if perms.auth.add_group %}
+                            {% if perms.auth.add_permission %}
                             <th>Action</th>
                             {% endif %}
                             <hr>
                         </thead>
                         <tbody>
                             <tr>
-                                {% for group in groups %}
+                                {% for perm in permissions %}
                                 <td>{{forloop.counter}}</td>
-                                <td>{{group.name}}</a></td>
+                                <td>{{perm.name}}</a></td>
                                 <td>
-                                    {% if perms.auth.add_group %}
-                                    <a class="mr-3" href="{% url 'group_perms' group.id %}"><i class="fe fe-edit">Permissions</i></a><a href="{% url 'delete_group' group.id %}" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fe fe-trash-2"></i></a>
+                                    <a class="mr-3" href=""><i class="fe fe-edit"></i></a><a href="" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fe fe-trash-2"></i></a>
                                 </td>
-                                {% endif %}
                             </tr>
                             {% endfor %}
                         </tbody>

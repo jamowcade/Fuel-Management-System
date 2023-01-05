@@ -3,7 +3,7 @@ from .forms import FuelForm, StockForm, SaleForm, UpdateProfile, UpdatePasswords
 from .models import Fuel, Sale, Stock
 from django.db.models import Sum
 from django.contrib import messages
-from django.contrib.auth.models import User, Group
+from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
@@ -231,7 +231,7 @@ def saveFuel(request):
     if request.method == 'POST':
         form = FuelForm(request.POST)
         if form.is_valid():
-            form.save()
+            form.save() 
             messages.success(request, 'fuel added successfully')
             return redirect('fuels')
         else:
@@ -526,3 +526,31 @@ def del_user_group(request, pk, name):
     print(group)
     user.groups.remove(group)
     # return redirect('user_group')
+
+def permissions(request):
+    permissions = Permission.objects.all()
+
+    context = {
+        "permissions":permissions,
+        "page_name":"All Pernissions"
+    }
+
+    return render(request, 'base/permissions.html', context)
+
+def group_perms(request, pk):
+    permissions = Permission.objects.all()
+    group = Group.objects.get(id=pk)
+    group_perms = [i for i in group.permissions.all()]
+    
+    if request.method == 'POST':
+        pnane = request.POST.get('pname')
+        perm = Permission.objects.get(id=pnane)
+        # user = User.objects.get(id=pk)
+        group.permissions.add(perm)
+    context = {
+        "permissions": permissions,
+        "group_permission": group_perms
+    }
+
+    return render(request, 'base/group_permissions.html', context)
+

@@ -1,4 +1,5 @@
 from django.urls import path
+# from django.conf.urls import url
 from .import views
 
 
@@ -29,6 +30,8 @@ urlpatterns = [
     path('groups/', views.addGroup, name="groups" ),
     path('delete_group/<str:pk>/', views.deleteGroup, name="delete_group" ),
     path('user_group/<str:pk>/', views.userGroup, name="user_group" ),
-    path('delete_user_group/<str:name>', views.del_user_group, name="del_user_group" ),
+    path('permissions/', views.permissions, name="permissions" ),
+    path('group_perms/<str:pk>/', views.group_perms, name="group_perms" ),
+
 
 ]

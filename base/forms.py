@@ -33,7 +33,7 @@ class userUpdate(ModelForm):
     # groups = forms.MultipleChoiceField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm rounded-0'}), label="Groups")
     email = forms.CharField(widget=forms.EmailInput(attrs={'class':'form-control form-control-sm rounded-0'}), label="Email")
     # groups = forms.MultipleChoiceFieldwidget=forms.TextInput(attrs={'class':'form-control' }),label="groups")
-
+    # new_Password = forms.CharField(widget=forms.TextInput(attrs={'class':'form-control form-control-sm rounded-0'}), label="New Password")
 
     class Meta:
         model = User
@@ -47,6 +47,11 @@ class UpdatePasswords(PasswordChangeForm):
     class Meta:
         model = User
         fields = ['old_password','new_password1', 'new_password2']
+
+class GroupForm(ModelForm):
+    class Meta:
+        fields = '__all__'
+
 
 class FuelForm(ModelForm):
     class Meta:

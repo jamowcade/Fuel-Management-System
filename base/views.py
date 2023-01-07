@@ -145,9 +145,20 @@ def userProfile(request):
     }
     return render(request, 'base/profile.html', context)
 
+#Update User Password.
+"""
+    METHOD: POST
+    chanage user Password.
+    a user can change his/her password. fields required (old_password, new_password1, new_password2)
+    only logged in users can change their password. 
+    PasswordChangeForm from forms.py is used, if form data is valid it is saved and success message
+    is displayed else error message is displayed.
+    instance of PasswordChangeForm is returned to the template. to render the form html.
+"""
+
 @login_required(login_url='login')
 def updatePassword(request):
-    form = UpdatePasswords(request.user)
+    form = UpdatePasswords(request.user) # initiates form with the current user.
     context = {
         "form":form
     }
@@ -166,6 +177,19 @@ def updatePassword(request):
 
     return render(request, 'base/update_password.html', context)
 
+#Edit User informatioin.
+"""
+    METHOD: POST
+    change user information.
+    a user with change_user permission can edit user information. user can be assigned 
+    or reasigned groups and permissions. 
+    :param pk: the primary key of the user.
+    :param user: instance of User object to be edited.
+    :param form: instance of userUpdate form.
+    form is initiated  with request.POST data nad user instance.
+    if form data is valid it is saved and success message is displayed, else error raised. 
+    template expects context of form with user data.
+"""
 @login_required(login_url='login')
 @permission_required('auth.change_user', raise_exception=True)
 def editUser(request, pk):
@@ -183,9 +207,31 @@ def editUser(request, pk):
 
     return render(request, 'base/edit_user.html', context)
 
+#delete user..
+"""
+    METHOD: DELETE
+    delete a user
+    a user with delete_user permission can delete a user. 
+    the primary key of the user to be deleted is required. ance the user is captured
+    from the User model it is deleted.
+    :param pk: the primary key of the user to be deleted
+    once user is deleted success message is displated and returns to user page.
+"""
+@permission_required('auth.delete_user', raise_exception=True)
 def deleteUser(request, pk):
     user = User.objects.get(id=pk).delete()
     return redirect(users)
+
+#Home page..
+"""
+    only logged in user can access this page.
+    Renders the home page template.
+    the template expects the following.
+    :total_fuels: the total of all active fuels/petrols.
+    :total_sales: the total of all sales in the system.
+    :fuels: a list of of all available fuels/petrols.
+    :page_name: the name of the current page.
+"""
 
 @login_required(login_url='login')
 # @permission_required('base.view_fuel', raise_exception=True)
@@ -208,6 +254,16 @@ def home(request):
     }
     return render(request, 'base/index.html', context)
 
+#Fuel list Page
+"""
+    MEHTOD: POST.
+    only logged in users with view_fuel permission can access this page.
+    Renders the fuel_list template.
+    the template expects the following.
+    :fuels: a list of of all available fuels/petrols.
+    :page_name: the name of the current page.
+    if there is a post from this page it saves data to Fuel Model using FuelForm.
+"""
 
 @login_required(login_url='login')
 @permission_required('base.view_fuel', raise_exception=True)
@@ -224,6 +280,19 @@ def fuelView(request):
         "page_name":"Fuel List"
     }
     return render(request, 'base/fuel_list.html', context)
+
+#create new fuel type.
+"""
+    MEHTOD: POST.
+    only logged in users with add_fuel permission can access this view.
+    Renders the fuelform.html template.
+    url: new_fuel
+    the template expects:
+    :form: instance of FuelForm.
+    :page_name: the name of the current page.
+    if there is a post from this page new record is added to Fuel Model using FuelForm.
+"""
+
 @login_required(login_url='login')
 @permission_required('base.add_fuel', raise_exception=True)
 def saveFuel(request):
@@ -243,6 +312,21 @@ def saveFuel(request):
     }
     return render(request, 'base/fuelform.html', context)  
 
+#Update fuel type.
+"""
+    MEHTOD: PATCH.
+    only logged in users with change_fuel permission can access this view.
+    Renders the fuelform.html template with fuel instance.
+    url: update_fuel/pk where pk is the primary key of the fuel, for example; update_fuel/2
+    fuel instance is captured using pk returned from the template.
+    pk: primary key of the selected fuel type. for example. 
+    the template expects the following.
+    :form: instance of FuelForm.
+    :fuel: instance of Fuel Model.
+    :page_name: the name of the current page.
+    if there is a post from this page it saves data to Fuel Model using FuelForm.
+"""
+
 @login_required(login_url='login')
 def updateFuel(request, pk):
     fuel = Fuel.objects.get(id=pk)
@@ -261,12 +345,34 @@ def updateFuel(request, pk):
 
     }
     return render(request, 'base/fuelform.html', context)
+
+# delte fuel
+"""
+    METHOD: DELETE.
+    deletes fuel type. 
+    url: delete_fuel/pk where pk is the primary key of the fuel, for example, delete_fuel/3
+    once fuel is deleted return to fuels url with success message.
+
+"""
+
 @login_required(login_url='login')
+@permission_required('base.delete_fuel', raise_exception=True)
 def deleteFuel(request, pk = None):
     fuel = Fuel.objects.filter(id=pk).delete()
     messages.success(request, f"Fuel {fuel} has been deleted successfully")
     return redirect('fuels')
 
+
+#Stock list Page
+"""
+    only logged in users with view_stock permission can access this view.
+    Renders the stock_list template.
+    url: stocks
+    the template expects the following.
+    :stocks: a list of of all available stocks.
+    :fuels: a list of of all available fuels/petrols.
+    :page_name: the name of the current page.
+"""
 
 @login_required(login_url='login')
 @permission_required('base.view_stock', raise_exception=True)
@@ -281,6 +387,18 @@ def stockView(request):
 
     return render(request, 'base/stock_list.html', context)
 
+#create new stock.
+"""
+    MEHTOD: POST.
+    only logged in users with add_stock permission can access this view.
+    Renders the stockform.html template.
+    url: new_stock
+    the template expects:
+    :form: instance of StockForm.
+    :fuels: the list of all available fuels.
+    :page_name: the name of the current page.
+    if there is a post from this page new record is added to Stock Model using StockForm.
+"""
 
 @login_required(login_url='login')
 @permission_required('base.add_fuel', raise_exception=True)
@@ -305,7 +423,23 @@ def saveStock(request):
     
     return render(request, 'base/stockform.html', context)
 
-#update stock
+
+#Update stock.
+"""
+    MEHTOD: UPDATE.
+    only logged in users with change_stock permission can access this view.
+    Renders the fuelform.html template with stock instance.
+    url: update_stock/pk where pk is the primary key of the stock, for example; update_stock/2
+    stock instance is captured using pk returned from the template.
+    pk: primary key of the selected stock.
+    the template expects the following.
+    :form: instance of StockForm.
+    :stock: instance of Stock Model.
+    :fuels: the list of all available fuels
+    :page_name: the name of the current page.
+    if there is a post from this page it saves data to Fuel Model using FuelForm.
+"""
+
 @login_required(login_url='login')
 @permission_required('base.change_stock', raise_exception=True)
 def updateStock(request, pk):
@@ -333,18 +467,63 @@ def updateStock(request, pk):
     }
     return render(request, 'base/stockform.html', context)
 
+# delete Stock
+"""
+    METHOD: DELETE.
+    deletes stock. 
+    only logged in user with permsiion of delete_stock can access thie view.
+    url: delete_stock/pk where pk is the primary key of the stock, for example, delete_stock/3
+    if stock is deleted returns to stocks url with success message  else error is raised..
+
+"""
+
 @login_required(login_url='login')
 @permission_required('base.delete_stock', raise_exception=True)
 def deleteStock(request, pk):
-    # if not request.user.has_perm('base.delete_Stock'):
-    #     messages.warning(request, 'You don\'t have permission to delete stock', extra_tags="danger")
-    #     return redirect('stocks')
     try:
         stock = Stock.objects.filter(id=pk).delete()
         messages.success(request, f'stock {stock} has been deleted')
         return redirect('stocks')
     except:
         messages.error(request, 'invalid stock id')
+
+#sales list view
+"""
+    lists all sales.
+    only logged in user with permission fo view sales can access this view.
+    renders sales_list.html template.
+    url: sales
+    the template expecst the following.
+    :sales: a list of all sales in the system.
+    :page_name: the name of the page.
+
+"""
+
+@login_required(login_url='login')
+@permission_required('base.view_sale', raise_exception=True)
+def saleView(request):
+    fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
+    sales = Sale.objects.filter(fuel__id__in=fuels).all()
+
+    context = {
+        "sales":sales,
+        "page_name":"Sales List"
+    }
+    return render(request, 'base/sale_list.html', context)
+
+#create new sale.
+"""
+    MEHTOD: POST.
+    only logged in users with add_sale permission can access this view.
+    Renders the saleform.html template.
+    url: new_sale
+    the template expects:
+    :form: instance of SaleForm.
+    :fuels: the list of all available fuels.
+    :page_name: the name of the current page.
+    if there is a post from this page new record is added to Sale Model using SaleForm.
+"""
+
 
 @login_required(login_url='login')
 @permission_required('base.add_sale', raise_exception=True)
@@ -383,7 +562,7 @@ def saveSale(request):
                 messages.error(request, 'Volume should be greator than 0')
                 return redirect('new_sale')
             else:
-                sale.amount = sale.volume*price # calculate the amount
+                sale.amount = sale.volume*price # calculate the total amount
                 sale.save()
                 messages.success(request, 'Sale added successfully')
                 return redirect('sales')
@@ -392,13 +571,27 @@ def saveSale(request):
         "page_name":"Add New Sale",
         "fuels":fuels
     }
-    
-    
     return render(request, 'base/saleform.html', context)
+
+#Update sale.
+"""
+    MEHTOD: UPDATE.
+    only logged in users with change_sale permission can access this view.
+    Renders the fuelform.html template with sale instance.
+    url: update_sale/pk where pk is the primary key of the sale, for example; update_sale/10
+    sale instance is captured using pk returned from the template.
+    pk: primary key of the selected sale.
+    the template expects the following.
+    :form: instance of SaleForm.
+    :sale: instance of stock Object.
+    :fuels: the list of all available fuels
+    :page_name: the name of the current page.
+    if there is a post from this page it saves data to Sale Model using SaleForm.
+"""
+
 
 @login_required(login_url='login')
 @permission_required('base.change_sale', raise_exception=True)
-#update sales
 def updateSale(request, pk):
     sale = Sale.objects.get(id=pk)
     fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
@@ -424,6 +617,16 @@ def updateSale(request, pk):
     
     return render(request, 'base/saleform.html', context)
 
+
+# delete Stock
+"""
+    METHOD: DELETE.
+    deletes sale. 
+    only logged in user with permsiion of delete_sale can access thie view.
+    url: delete_sale/pk where pk is the primary key of the sale, for example, delete_sale/10
+    if sale is deleted returns to sales url with success message  else error is raised..
+
+"""
 @login_required(login_url='login')
 @permission_required('base.delete_sale', raise_exception=True)
 def deleteSale(request, pk):
@@ -433,6 +636,23 @@ def deleteSale(request, pk):
         return redirect('sales')
     except:
         messages.error(request, 'invalid stock id')
+
+      
+#fuel details.
+"""
+    display full information of the selected fuel.
+    only logged in users with view_fuel can access this view.
+    url: fuel_detail/pk where pk is the primary key of the selected fuel.
+    renders fuel_detail.html template.
+    the template expects the following.
+    :fuel: instance of the Fuel Object.
+    :stocks: list of related stocks of the current fuel.
+    :sales: list of related stocks of the current fuel.
+    :total_sale: total sales of the current fuel.
+
+"""
+
+
 @permission_required('base.view_fuel', login_url='fuels')
 @login_required(login_url='login')
 def fuelDetail(request, pk):
@@ -451,21 +671,16 @@ def fuelDetail(request, pk):
     return render(request, 'base/fuel_details.html', context)
 
 
-
-
-@login_required(login_url='login')
-@permission_required('base.view_sale', raise_exception=True)
-#sale view
-def saleView(request):
-    fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
-    sales = Sale.objects.filter(fuel__id__in=fuels).all()
-
-    context = {
-        "sales":sales,
-        "page_name":"Sales List"
-    }
-    return render(request, 'base/sale_list.html', context)
-
+#inventory
+"""
+    list of inventory.
+    only logged in user with view permission can see this view.
+    renders inventory.html template. 
+    url: inventory.
+    template expects:
+    :fuels: a list of all a vailable fuels.
+    :page_name: the name of the page.
+"""
 
 @login_required(login_url='login')
 @permission_required('base.view_stock', raise_exception=True)
@@ -479,7 +694,22 @@ def inventoryView(request):
     return render(request, 'base/inventory.html', context)
 
 
-#groups.
+#================================================================================
+#GROUPS
+#add new group.
+
+"""
+    METHOD: POST
+    list available groups and ads new group to the system.
+    url: groups.
+    renders template groups.html.
+    the template expects:
+    :groups: list of all available groups.
+    :page_name: the name of the page.
+    if there is a post method data is saved to Group model and success message is displayed
+    selse error is raised.
+
+"""
 def addGroup(request):
     groups = Group.objects.all()
     if request.method == 'POST':
@@ -488,6 +718,9 @@ def addGroup(request):
             if len(Group.objects.filter(name=name)) == 0:
                 group = Group(name=name)
                 group.save()
+                messages.success(request, 'group added successfully')
+            else:
+                messages.error(request, 'group couln\'t be added', extra_tags='danger')
 
     context = {
         "groups":groups,
@@ -496,17 +729,39 @@ def addGroup(request):
     return render(request, 'base/groups.html', context)
 
 
+# delete group
+"""
+    METHOD: DELETE.
+    deletes group. 
+    url: delete_group/pk where pk is the primary key of the group, for example, delete_group/5
+    once group is deleted return to groups url with success message.
+
+"""
 def deleteGroup(request, pk):
     group = Group(id=pk)
     group.delete()
+    messages.success(request, 'group deleted')
     return redirect('groups')
 
+#assign user to group.
+"""
+    METHOD: POST
+   display user's groups and assign new group
+    url: user_group/pk where pk primary key of the the selected user.
+    renders template user_groups.html.
+    user is retrieved from the User model using pk.
+    the template expects:
+    :groups: list of all available groups.
+    :user_groups: list of user's groups.
+    :page_name: the name of the page.
+    if there is a post method user.groups is updated and success message is displayed
+    selse error is raised.
+
+"""
 def userGroup(request, pk):
     groups = Group.objects.all()
     user = User.objects.get(id=pk)
     user_group = [i for i in user.groups.all()]
-    print(user_group)
-    
     if request.method == 'POST':
         gname = request.POST.get('gname')
         group = Group.objects.get(id=gname)
@@ -519,6 +774,15 @@ def userGroup(request, pk):
 
     return render(request, 'base/user_groups.html', context)
 
+# remove group from user
+"""
+    METHOD: DELETE.
+    remove groups from the user. 
+    url: del_user_group/pk/name where pk is the primary key of the user, and name is the group name
+    to be removed for example, del_user_group/5/group1.
+
+"""
+
 def del_user_group(request, pk, name):
     group = Group.objects.get(name=name)
     user = User.objects.get(id=pk)
@@ -527,6 +791,16 @@ def del_user_group(request, pk, name):
     user.groups.remove(group)
     # return redirect('user_group')
 
+
+#permissions.
+"""
+    list all permissions.
+    url: permissions.
+    renders permissions.html template.
+    template expects.
+    :permissions: list of all available permissions.
+
+"""
 def permissions(request):
     permissions = Permission.objects.all()
 
@@ -536,6 +810,20 @@ def permissions(request):
     }
 
     return render(request, 'base/permissions.html', context)
+
+
+#Group Permissions.
+"""
+    METHOD: POST.
+    lists group permissions.
+    url: group_perms/pk where pk is the primay key of the group.
+    renders template group_permissions.html.
+    the template expects.
+    :permissions: list of all permissions.
+    :group_permission: list of all group permissions.
+    If ther is a post method group.permissions is updated.
+
+"""
 
 def group_perms(request, pk):
     permissions = Permission.objects.all()

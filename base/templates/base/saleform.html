@@ -2,6 +2,7 @@
 {% block title %}
     New Sale
 {% endblock title %}
+{% load crispy_forms_tags %}          
 
 {% block content %}
 <div class="container">
@@ -17,14 +18,15 @@
                 <div class="card-body"> 
             <form method="post" action="">                    
                 {% csrf_token %}
-                {% for field in form %}
+                
                     <div class="form-group">
-                        <label for="customer">{{field.label}}</label>
-                        <p class="form-control">{{field}}</p>
+                        
+                        {{ form|crispy }}                    
+
                     </div>
                     
                     
-                {% endfor %}
+               
                 
                 <button type="submit" class="btn btn-primary">Save</button>
             </form>

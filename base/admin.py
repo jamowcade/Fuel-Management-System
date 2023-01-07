@@ -5,5 +5,9 @@ from .models import Fuel, Sale, Stock
 admin.site.register(Fuel)
 admin.site.register(Sale)
 admin.site.register(Stock)
+# admin.site.register(Stock)
+
+
+
 
 

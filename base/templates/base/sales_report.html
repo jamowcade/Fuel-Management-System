@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!--Section: Content-->
+<h3 class="fw-bolder">{{page_title}}</h3>
+<hr>
+<section class="py-3">
+    <div class="container">
+        <div class="card rounded-0 shadow-sm blur">
+            <div class="card-body">
+                <div class="container-fluid">
+                    <div class="d-flex w-100 mb-2">
+                        <div class="col-auto flex-shrink-1 flex-grow-1">
+                            <form method="post">
+                                {% csrf_token %}
+                            <div class="row mx-0 w-100">
+                     
+                                <div class="col-lg-1 col-md-2 col-sm-4"><label for="" class="control-label">Date</label></div>
+                                 <div class="col-lg-4 col-md-4 col-sm-6">
+                                    <input type="date" class="form-control form-control-sm rounded-0" id="rep_date" name="rep_date" value="{{rep_date|date:'Y-m-d'}}">
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-4">
+                                    <input type="submit" value="send">
+                                </div>
+                           
+                            </div>
+                        </form>
+                        </div>
+                        <div class="col-auto">
+                            <a href="javascript:void(0)" id="print" class="btn btn-light border btn-sm rounded-0 bg-gradient"><i class="fa fa-print"></i> Print Report</a>
+                        </div>
+                    </div>
+                    <table class="table table-stripped table-bordered" id="report-table">
+                        <colgroup>
+                            <col width="5%">
+                            <col width="15%">
+                            <col width="25%">
+                            <col width="25%">
+                            <col width="10%">
+                            <col width="10%">
+                            <col width="10%">
+                        </colgroup>
+                        <thead>
+                            <tr class="bg-primary bg-gradient text-light">
+                                <th class="text-center px-2 py-1 align-middle">#</th>
+                                <th class="text-center px-2 py-1 align-middle">Date</th>
+                                <th class="text-center px-2 py-1 align-middle">Customer</th>
+                                <th class="text-center px-2 py-1 align-middle">Petrol</th>
+                                <th class="text-center px-2 py-1 align-middle">Price</th>
+                                <th class="text-center px-2 py-1 align-middle">Volume</th>
+                                <th class="text-center px-2 py-1 align-middle">Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sale in sales %}
+                            <tr>
+                                <td class="text-center px-2 py-1 align-middle">{{forloop.counter}}</td>
+                                <td class=" px-2 py-1 align-middle">{{ sale.created|date:"M d, Y" }}</td>
+                                <td class=" px-2 py-1 align-middle">{{sale.customer_name}}</td>
+                                <td class="px-2 py-1 align-middle">{{sale.fuel}}</td>
+                                <td class="text-end px-2 py-1 align-middle">{{ sale.fuel.price|floatformat:2}} </td>
+                                <td class="text-end px-2 py-1 align-middle">{{ sale.volume|floatformat:2}} L</td>
+                                <td class="text-end px-2 py-1 align-middle">{{ sale.amount|floatformat:2}}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <th colspan="6" class="text-center">Total Sale for ({{rep_date|date:"F d, Y"}})</th>
+                                <th class="text-end fs-bolder">{{total_amount|floatformat:2}}</th>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+</div>
+<noscript id="print-header">
+<div class="lh-1">
+    <h5 class="text-center">{{ system_name }}</h5>
+    <h3 class="text-center">Sales Daily Report</h3>
+    <div class="text-center">as of</div>
+    <h5 class="text-center">{{rep_date|date:"F d, Y"}}</h5>
+    <hr>
+</div>
+<script>
+    $(function() {
+        $('#rep_date').change(function() {
+            location.href = "{% url 'sale_report' %}/" + $(this).val()
+        })
+        $('#print').click(function() {
+            var h = $('head').clone()
+            var table = $('#report-table').clone()
+            var phead = $($('noscript#print-header').html()).clone()
+            var el = $('<div>')
+            el.append(h)
+            el.append(phead)
+            el.append(table)
+            start_loader()
+            var nw = window.open("", "_blank", "width=1000, heigth=900, left=0")
+            nw.document.write(el.html())
+            nw.document.close()
+            setTimeout(() => {
+                nw.print()
+                setTimeout(() => {
+                    nw.close()
+                    end_loader()
+                }, 300)
+            }, 300)
+        })
+    })
+</script>
+</noscript> {% endblock %}
+
+

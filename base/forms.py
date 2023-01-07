@@ -1,7 +1,7 @@
 from django.forms import ModelForm
 from .models import Fuel, Stock, Sale
 from django import forms
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm, PasswordChangeForm
 
 
@@ -50,6 +50,7 @@ class UpdatePasswords(PasswordChangeForm):
 
 class GroupForm(ModelForm):
     class Meta:
+        model = Group
         fields = '__all__'
 
 

@@ -4,35 +4,7 @@
 {% block content %}
 <br>
     <div class="container justify-content-center">
-     <div card>
-        <div class="card-header">
-            Add new Group
-        </div>
-        <div class="card-body">
-            <form method="post">
-                {% csrf_token %}
-                <div class="form-group">
-                    <div class="row">
-                        <div class="col">
-                            <input type="text" class="form-control" name="name" placeholder="Group name">
-    
-                        </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">submit</button>
-    
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </form>
-        </div>
-       
-        <!-- {% if perms.auth.add_user %}
-
-        <a href="{% url 'register' %}"></a>
-        {% endif %} -->
-    </div>
+ 
         <div class="card mb-4 mt-2">
             <div class="card-header">
                 <h4>{{page_name}}</h4>
@@ -45,7 +17,7 @@
                             <th>name</th>
                             
                             {% if perms.auth.add_permission %}
-                            <th>Action</th>
+                            <!-- <th>Action</th> -->
                             {% endif %}
                             <hr>
                         </thead>

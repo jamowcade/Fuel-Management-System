@@ -19,6 +19,7 @@ urlpatterns = [
     path('delete_stock/<str:pk>/', views.deleteStock, name="delete_stock"),
     path('update_sale/<str:pk>/', views.updateSale, name="update_sale"),
     path('delete_sale/<str:pk>/', views.deleteSale, name="delete_sale"),
+    path('sale_report/', views.sales_report, name="sale_report"),
     path('login/', views.loginUser, name="login" ),
     path('logout/', views.logoutUser, name="logout" ),
     path('register/', views.addUser, name="register" ),
@@ -32,6 +33,6 @@ urlpatterns = [
     path('user_group/<str:pk>/', views.userGroup, name="user_group" ),
     path('permissions/', views.permissions, name="permissions" ),
     path('group_perms/<str:pk>/', views.group_perms, name="group_perms" ),
-
+    path('edit_group/<str:pk>/', views.edit_group, name="edit_group" ),
 
 ]

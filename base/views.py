@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect
-from .forms import FuelForm, StockForm, SaleForm, UpdateProfile, UpdatePasswords, userUpdate
+from .forms import FuelForm, StockForm, SaleForm, UpdateProfile, UpdatePasswords, userUpdate, GroupForm
 from .models import Fuel, Sale, Stock
 from django.db.models import Sum
+from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.models import User, Group, Permission
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
@@ -842,3 +843,61 @@ def group_perms(request, pk):
 
     return render(request, 'base/group_permissions.html', context)
 
+
+# edit groups.
+"""
+    Edit group informations. assign groups to permissions.
+
+
+"""
+def edit_group(request, pk):
+    group = Group.objects.get(id=pk)
+    group_form = GroupForm(instance=group)
+    if request.method == 'POST':
+        group_form = GroupForm(request.POST, instance=group)
+        if group_form.is_valid():
+            group_form.save()
+            messages.success(request, 'Group data is updated')
+            return redirect('groups')
+    context = {
+        "group_form":group_form
+    }
+
+    return render(request, 'base/edit_group.html', context)
+
+
+def sales_report(request, rep_date=None):
+    
+    context = {
+        
+    }
+    if request.method == 'POST':
+        rep_date = request.POST.get('rep_date')
+        print(rep_date)
+        if rep_date is not None:
+            rep_date = datetime.strptime(rep_date, "%Y-%m-%d")
+        else:
+            rep_date = datetime.now()
+        year = rep_date.strftime("%Y")
+        month = rep_date.strftime("%m")
+        day = rep_date.strftime("%d")
+        fuels = Fuel.objects.filter(delete_flag = 0, status = 1).all().values_list('id')
+        sales = Sale.objects.filter(fuel__id__in = fuels, 
+                                                    created__month = month,
+                                                    created__day = day,
+                                                    created__year = year,
+                                                    )
+
+        context = {
+            "page_name":"Sale report",
+            "rep_date": rep_date,
+            "sales": sales.all(),
+            "total_amount": sales.aggregate(Sum('amount'))['amount__sum']
+
+        }                                    
+    
+        if context['total_amount'] is None:
+            context['total_amount']= 0
+
+    return render(request, "base/sales_report.html", context)
+    

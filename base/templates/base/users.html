@@ -38,7 +38,7 @@
                                 
                                 <td>{{forloop.counter}}</td>
                                 <td>{{user.email}}</a></td>
-                                <td>{{user.username}}</td>
+                                <td><a class="mr-3" href="{% url 'edit_user' user.id %}">{{user.username}}</a></td>
                                 <td>{{user.first_name}}</td>
                                 <td>{{user.last_name}}</td>
                                 <Td>{{user.last_login}}</Td>
@@ -47,7 +47,7 @@
                                 <td>
                                     {% if perms.auth.add_user %}
                                     <a href="{% url 'user_group' user.id %}"><i class="fe fe-edit">groups</i></a>
-                                    <a class="mr-3" href="{% url 'edit_user' user.id %}"><i class="fe fe-edit"></i></a><a href="{% url 'delete_user' user.id %}" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fe fe-trash-2"></i></a>
+                                    <a class="mr-3" href="{% url 'edit_user' user.id %}">Edit<i class="fe fe-edit"></i></a><a href="{% url 'delete_user' user.id %}" onclick="return confirm('Are you sure you want to delete this item?');"><i class="fe fe-trash-2"></i></a>
                                 </td>
                                 {% endif %}
                             </tr>

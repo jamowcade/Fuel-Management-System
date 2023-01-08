@@ -28,11 +28,13 @@ urlpatterns = [
     path('update_password/', views.updatePassword, name="update_password" ),
     path('edit_user/<str:pk>/', views.editUser, name="edit_user" ),
     path('delete_user/<str:pk>/', views.deleteUser, name="delete_user"),
+    path('delete_user_group/<str:pk>/', views.del_user_group, name="delete_user_group"),
     path('groups/', views.addGroup, name="groups" ),
     path('delete_group/<str:pk>/', views.deleteGroup, name="delete_group" ),
-    path('user_group/<str:pk>/', views.userGroup, name="user_group" ),
+    path('user_group/<int:pk>/', views.userGroup, name="user_group" ),
     path('permissions/', views.permissions, name="permissions" ),
     path('group_perms/<str:pk>/', views.group_perms, name="group_perms" ),
     path('edit_group/<str:pk>/', views.edit_group, name="edit_group" ),
+
 
 ]

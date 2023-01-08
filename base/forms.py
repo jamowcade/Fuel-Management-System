@@ -19,6 +19,10 @@ class UserForm(UserCreationForm):
         model = User
         fields = ('email', 'username','first_name', 'last_name','password1', 'password2',)
 
+class UserProfile(ModelForm):
+    class Meta:
+        model = User
+        fields = '__all__'
 
 class UpdateProfile(UserChangeForm):
     # first_name = forms.CharField(max_length=100, )

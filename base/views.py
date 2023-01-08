@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .forms import FuelForm, StockForm, SaleForm, UpdateProfile, UpdatePasswords, userUpdate, GroupForm
+from .forms import FuelForm, StockForm, UserProfile, SaleForm, UpdateProfile, UpdatePasswords, userUpdate, GroupForm
 from .models import Fuel, Sale, Stock
 from django.db.models import Sum
 from datetime import datetime
@@ -131,6 +131,7 @@ def logoutUser(request):
 def userProfile(request):
     user = User.objects.get(id = request.user.id)
     user_form = UpdateProfile()
+    profile_form = UserProfile()
     if request.method == 'POST':
         user_form = UpdateProfile(request.POST, instance=user)
         if user_form.is_valid():
@@ -142,7 +143,8 @@ def userProfile(request):
     else:
         user_form = UpdateProfile(instance=user)
     context = {
-        "user_form":user_form
+        "user_form":user_form,
+        "profile_form":profile_form
     }
     return render(request, 'base/profile.html', context)
 
@@ -503,13 +505,27 @@ def deleteStock(request, pk):
 @login_required(login_url='login')
 @permission_required('base.view_sale', raise_exception=True)
 def saleView(request):
-    fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
-    sales = Sale.objects.filter(fuel__id__in=fuels).all()
-
     context = {
-        "sales":sales,
-        "page_name":"Sales List"
+        "page_name":"Sales list"
     }
+    fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
+    if request.method=='POST':
+        search_term = request.POST.get('search_term')
+        if search_term != 'all':
+            sales = Sale.objects.filter(fuel__id = search_term).all()
+            context['sales'] = sales
+            context['fuels'] = fuels
+            context['page_name'] = 'Sales List'
+        else:
+            fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
+            sales = Sale.objects.filter(fuel__id__in=fuels).all()
+            context['sales'] = sales
+            context['fuels'] = fuels
+    else:
+        fuels = Fuel.objects.filter(delete_flag=0, status = 1).all()
+        sales = Sale.objects.filter(fuel__id__in=fuels).all()
+        context['sales'] = sales
+        context['fuels'] = fuels
     return render(request, 'base/sale_list.html', context)
 
 #create new sale.
@@ -557,7 +573,7 @@ def saveSale(request):
                 stock_volume = fuel_stock_volume
             fuel_volume = stock_volume - sales_volume # subtruct the two volumes to get the available volume for the selected fuel.
             if sale_volume > fuel_volume: # compare the result to the user intered volume. to check if the selected fuel has enough volume.
-                messages.error(request, 'Your volume exceeds available Volume')
+                messages.error(request, 'Your volume exceeds available Volume', extra_tags='danger')
                 return redirect('new_sale')
             elif sale_volume <= 0: # if user entered zero or negative number
                 messages.error(request, 'Volume should be greator than 0')
@@ -712,7 +728,7 @@ def inventoryView(request):
 
 """
 def addGroup(request):
-    groups = Group.objects.all()
+
     if request.method == 'POST':
         name = request.POST.get('name')
         if name != "":
@@ -722,7 +738,7 @@ def addGroup(request):
                 messages.success(request, 'group added successfully')
             else:
                 messages.error(request, 'group couln\'t be added', extra_tags='danger')
-
+    groups = Group.objects.all()
     context = {
         "groups":groups,
         "page_name":"Group List"
@@ -761,13 +777,15 @@ def deleteGroup(request, pk):
 """
 def userGroup(request, pk):
     groups = Group.objects.all()
-    user = User.objects.get(id=pk)
-    user_group = [i for i in user.groups.all()]
+   
     if request.method == 'POST':
         gname = request.POST.get('gname')
         group = Group.objects.get(id=gname)
         user = User.objects.get(id=pk)
         user.groups.add(group)
+
+    user = User.objects.get(id=pk)
+    user_group = [i for i in user.groups.all()]
     context = {
         "groups": groups,
         "user_group": user_group
@@ -865,7 +883,8 @@ def edit_group(request, pk):
 
     return render(request, 'base/edit_group.html', context)
 
-
+@login_required(login_url='login')
+@permission_required('base.view_sale', raise_exception=True)
 def sales_report(request, rep_date=None):
     
     context = {

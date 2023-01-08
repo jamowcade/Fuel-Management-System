@@ -166,7 +166,7 @@
                     </li>
                     <li class="nav-item dropdown user-profile">
                         <a href="javascript:void(0)" class="nav-link dropdown-toggle " id="navbarDropdown4" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <img src="{% static 'assets/img/avtar/02.jpg' %}" alt="avtar-img">
+                            <img src="{% static 'assets/img/avtar/03.jpg' %}" alt="avtar-img">
                             <span class="bg-success user-status"></span>
                         </a>
                         <div class="dropdown-menu animated fadeIn" aria-labelledby="navbarDropdown">
@@ -174,7 +174,7 @@
                                 <div class="d-flex align-items-center justify-content-between">
                                     <div class="mr-1">
                                         <h4 class="text-white mb-0">{{request.user}}</h4>
-                                        <small class="text-white">{{request.email}}</small>
+                                        <small class="text-white">{{request.user.email}}</small>
                                     </div>
                                     <a href="{% url 'logout' %}" class="text-white font-20 tooltip-wrapper" data-toggle="tooltip" data-placement="top" title="" data-original-title="Logout"> <i
                                                     class="zmdi zmdi-power"></i></a>

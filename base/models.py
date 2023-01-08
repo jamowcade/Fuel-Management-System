@@ -1,6 +1,13 @@
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 # Create your models here.
+
+
+# class Profiel(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     profile_pic = models.ImageField(null=True, blank=True)
+
 
 
 # fuel/petrol type table.

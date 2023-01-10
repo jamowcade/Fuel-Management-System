@@ -4,72 +4,91 @@
 {% block content %}
 <br>
     <div class="container justify-content-center">
-     <div card>
+
+     <div class="card" >
         <div class="card-header">
-            Add group to Permission
+            <h3 class="form-label">{{group.name}}</h3>
         </div>
         <div class="card-body">
+
             <form method="POST">
                 {% csrf_token %}
                 <div class="form-group">
-                    <div class="row">
-                        <div class="col">
-                            <select name="pname" id="" class="form-control">
-                                {% for perms in permissions %}
-                                <option value="{{perms.id}}">{{perms.name}}</option>
-                                {% endfor %}
-                            </select>
-    
+                  
+                </div>
+
+                <div class="card mb-4 mt-2">
+                    <div class="card-header">
+                        <h4>{{page_name}}</h4>
+                    </div>
+                    <div class="card-body scrollbar scroll_dark pt-0" style="max-height: 350px;">
+                        <div class="container">
+                            
+                            <table id ="datatable" class="table table-bordered">
+                             
+                                <thead table-bold>
+                                    <th>#</th>
+                                    <th>Model</th>
+                                    <th>add</th>
+                                    <th>view</th>
+                                    <th>change</th>
+                                    <th>delete</th>
+        
+                        
+                                    <hr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>1</a></td>
+                                        <td>Fuels</a></td>
+                                        <td><input type="checkbox" {% if 25 in group_perms %} checked {% endif  %} name="perms" value="25"></a></td>
+                                        <td><input type="checkbox" {% if 26 in group_perms %} checked {% endif  %} name="perms" value="26"></a></td>
+                                        <td><input type="checkbox" {% if 27 in group_perms %} checked {% endif  %} name="perms" value="27"></a></td>
+                                        <td><input type="checkbox" {% if 28 in group_perms %} checked {% endif  %} name="perms" value="28"></a></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2</a></td>
+                                        <td>Stocks</a></td>
+                                        <td><input type="checkbox" {% if 29 in group_perms %} checked {% else %}checked="false" {% endif  %}  name="perms"  value="29"></td>
+                                        <td><input type="checkbox" {% if 30 in group_perms %} checked {% endif  %} name="perms" value="30"></td>
+                                        <td><input type="checkbox" {% if 31 in group_perms %} checked {% endif  %} name="perms" value="31"></td>
+                                        <td><input type="checkbox" {% if 32 in group_perms %} checked {% endif  %} name="perms" value="32"></td>
+                                    </tr>
+                                    <tr>
+                                        <td>3</a></td>
+                                        <td>Sales</a></td>
+                                        <td><input type="checkbox" {% if 33 in group_perms %} checked {% endif  %} name="perms"  value="33"></td>
+                                        <td><input type="checkbox" {% if 34 in group_perms %} checked {% endif  %} name="perms" value="34"></td>
+                                        <td><input type="checkbox" {% if 35 in group_perms %} checked {% endif  %} name="perms" value="35"></td>
+                                        <td><input type="checkbox" {% if 36 in group_perms %} checked {% endif  %} name="perms" value="36"></td>
+                                    </tr>
+                                    
+                                </tbody>
+                            </table>
+                            <hr>
+                         
+                        
                         </div>
-                        <div class="col">
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Add</button>
-    
-                            </div>
+                    </div>
+                    
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">Save changes</button>
                         </div>
                     </div>
                 </div>
+
+
+            </form>
+            <form method="POST">
+               
             </form>
         </div>
-       
-        <!-- {% if perms.auth.add_user %}
 
-        <a href="{% url 'register' %}"></a>
-        {% endif %} -->
     </div>
-        <div class="card mb-4 mt-2">
-            <div class="card-header">
-                <h4>{{page_name}}</h4>
-            </div>
-            <div class="card-body scrollbar scroll_dark pt-0" style="max-height: 350px;">
-                <div class="container">
-                    <table id ="datatable" class="table table-borderless">
-                        <thead table-bold>
-                            <th>#</th>
-                            <th>name</th>
-                            
-                            {% if perms.auth.add_permission %}
-                            <!-- <th>Action</th> -->
-                            {% endif %}
-                            <hr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                {% for perms in group_permission %}
-                                <td>{{forloop.counter}}</td>
-                                <td>{{perms.name}}</a></td>
-                                <td>
-                                    {% if perms.auth.add_permissions %}
-                                    <a href="" onclick="return confirm('Are you sure you want to delete this item?');" class="btn btn-danger"><i class="fe fe-trash-2">remove</i></a>
-                                </td>
-                                {% endif %}
-                            </tr>
-                            {% endfor %}
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
+      
     </div>
 
     <!-- <script>

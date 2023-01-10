@@ -5,6 +5,7 @@ from django.db.models import Sum
 from datetime import datetime
 from django.contrib import messages
 from django.contrib.auth.models import User, Group, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth import login, logout, authenticate, update_session_auth_hash
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
@@ -845,18 +846,28 @@ def permissions(request):
 """
 
 def group_perms(request, pk):
-    permissions = Permission.objects.all()
-    group = Group.objects.get(id=pk)
-    group_perms = [i for i in group.permissions.all()]
+    group = Group.objects.filter(id=pk)
+
+    group_perms = []
+    perms = Permission.objects.filter(group__id__in=group)
+    for gp in perms:
+        group_perms.append(gp.id)
+ 
+    # content_types = ContentType.objects.filter(app_label ='base')
+    # groups = Group.objects.all()
     
     if request.method == 'POST':
-        pnane = request.POST.get('pname')
-        perm = Permission.objects.get(id=pnane)
-        # user = User.objects.get(id=pk)
-        group.permissions.add(perm)
+        group = Group.objects.get(id=pk)
+        perms = request.POST.getlist('perms')
+        for perm in perms:
+            print(perm)
+            group.permissions.add(perm)
+        print('permission added')
+     
     context = {
-        "permissions": permissions,
-        "group_permission": group_perms
+        "group_perms": group_perms,
+        "group": group,
+        
     }
 
     return render(request, 'base/group_permissions.html', context)
@@ -870,7 +881,15 @@ def group_perms(request, pk):
 """
 def edit_group(request, pk):
     group = Group.objects.get(id=pk)
+    permissions = Permission.objects.all()
     group_form = GroupForm(instance=group)
+    group_perms = [i for i in group.permissions.all()]
+
+    gp = ''
+    for gp in group_perms:
+        gp = gp.name
+        print(gp)
+
     if request.method == 'POST':
         group_form = GroupForm(request.POST, instance=group)
         if group_form.is_valid():
@@ -878,8 +897,12 @@ def edit_group(request, pk):
             messages.success(request, 'Group data is updated')
             return redirect('groups')
     context = {
-        "group_form":group_form
-    }
+        "group_form":group_form,
+        "permissions":permissions,
+        "group_perms":group_perms,
+        "group":group,
+        "gp":gp    
+        }
 
     return render(request, 'base/edit_group.html', context)
 

@@ -846,38 +846,29 @@ def permissions(request):
 """
 
 def group_perms(request, pk):
-    group = Group.objects.filter(id=pk)
-    #get group permissions on page load.
-    group_perms = []
-    perms = Permission.objects.filter(group__id__in=group)
-    for gp in perms:
-        group_perms.append(gp.id)
+    group = Group.objects.get(id=pk)
+    #get group permissios and stors permission id in group_perms
+    group_perms = [i.id for i in group.permissions.all()]
     
     context = {
             "group_perms": group_perms,
             "group": group,
             
         }
- 
-    # content_types = ContentType.objects.filter(app_label ='base')
-    # groups = Group.objects.all()
-    
+    #add or update group permissions.
     if request.method == 'POST':
-        group = Group.objects.get(id=pk)
         perms = request.POST.getlist('perms')
-        group.permissions.clear()
+        group.permissions.clear() # clears permissions if exists.
         for perm in perms:
             print(perm)
-            group.permissions.add(perm)
-        
-        updated_group_perms = [i.id for i in group.permissions.all()]
+            group.permissions.add(perm) # add permission to group
+        # get updated permissions
+        updated_group_perms = [i.id for i in group.permissions.all()] 
         context = {
             "group_perms": updated_group_perms,
             "group": group,
             
         }
-   
-
     return render(request, 'base/group_permissions.html', context)
 
 

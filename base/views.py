@@ -847,11 +847,17 @@ def permissions(request):
 
 def group_perms(request, pk):
     group = Group.objects.filter(id=pk)
-
+    #get group permissions on page load.
     group_perms = []
     perms = Permission.objects.filter(group__id__in=group)
     for gp in perms:
         group_perms.append(gp.id)
+    
+    context = {
+            "group_perms": group_perms,
+            "group": group,
+            
+        }
  
     # content_types = ContentType.objects.filter(app_label ='base')
     # groups = Group.objects.all()
@@ -859,16 +865,18 @@ def group_perms(request, pk):
     if request.method == 'POST':
         group = Group.objects.get(id=pk)
         perms = request.POST.getlist('perms')
+        group.permissions.clear()
         for perm in perms:
             print(perm)
             group.permissions.add(perm)
-        print('permission added')
-     
-    context = {
-        "group_perms": group_perms,
-        "group": group,
         
-    }
+        updated_group_perms = [i.id for i in group.permissions.all()]
+        context = {
+            "group_perms": updated_group_perms,
+            "group": group,
+            
+        }
+   
 
     return render(request, 'base/group_permissions.html', context)
 
@@ -906,15 +914,18 @@ def edit_group(request, pk):
 
     return render(request, 'base/edit_group.html', context)
 
+
+"""
+    prints dialy sales report according to the selected data.
+
+"""
 @login_required(login_url='login')
 @permission_required('base.view_sale', raise_exception=True)
 def sales_report(request, rep_date=None):
     
-    context = {
-        
-    }
+    context = {}
     if request.method == 'POST':
-        rep_date = request.POST.get('rep_date')
+        rep_date = request.POST.get('rep_date') # get report dailly date
         print(rep_date)
         if rep_date is not None:
             rep_date = datetime.strptime(rep_date, "%Y-%m-%d")
